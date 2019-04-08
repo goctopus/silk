@@ -26,17 +26,7 @@ func (db *DB) clone() *DB {
 	return db
 }
 
-// Open initialize a new db connection, need to import driver first, e.g:
-//
-//     import _ "github.com/go-sql-driver/mysql"
-//     func main() {
-//       db, err := gorm.Open("mysql", "user:password@/dbname?charset=utf8&parseTime=True&loc=Local")
-//     }
-// GORM has wrapped some drivers, for easier to remember driver's import path, so you could import the mysql driver with
-//    import _ "github.com/jinzhu/gorm/dialects/mysql"
-//    // import _ "github.com/goctopus/drivers/postgres"
-//    // import _ "github.com/goctopus/drivers/sqlite"
-//    // import _ "github.com/goctopus/drivers/mssql"
+// Open initialize a new db connection, need to import driver first.
 func Open(dialect string, args ...interface{}) (db *DB, err error) {
 	if len(args) == 0 {
 		err = errors.New("invalid database source")
@@ -64,6 +54,7 @@ func Open(dialect string, args ...interface{}) (db *DB, err error) {
 	db = &DB{
 		db:      dbSQL,
 		dialect: GetDialectByDriver(dialect),
+		Driver:  dialect,
 	}
 
 	if err != nil {
@@ -145,8 +136,7 @@ func (db *DB) Exec(query string, args ...interface{}) sql.Result {
 	return rs
 }
 
-
-func SetColVarType(colVar *[]interface{}, i int, typeName string)  {
+func SetColVarType(colVar *[]interface{}, i int, typeName string) {
 	switch typeName {
 	case "INT":
 		var s sql.NullInt64
@@ -208,7 +198,7 @@ func SetColVarType(colVar *[]interface{}, i int, typeName string)  {
 	}
 }
 
-func SetResultValue(result *map[string]interface{}, index string, colVar interface{}, typeName string)  {
+func SetResultValue(result *map[string]interface{}, index string, colVar interface{}, typeName string) {
 	switch typeName {
 	case "INT":
 		temp := *(colVar.(*sql.NullInt64))
@@ -336,6 +326,18 @@ func SetResultValue(result *map[string]interface{}, index string, colVar interfa
 			(*result)[index] = nil
 		}
 	default:
-		(*result)[index] = colVar
+		if colVar2, ok := colVar.(*interface{}); ok {
+			if colVar, ok = (*colVar2).(int64); ok {
+				(*result)[index] = colVar
+			} else if colVar, ok = (*colVar2).(string); ok {
+				(*result)[index] = colVar
+			} else if colVar, ok = (*colVar2).(float64); ok {
+				(*result)[index] = colVar
+			} else if colVar, ok = (*colVar2).([]uint8); ok {
+				(*result)[index] = colVar
+			} else {
+				(*result)[index] = colVar
+			}
+		}
 	}
 }
