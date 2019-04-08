@@ -1,4 +1,4 @@
-package examples
+package models
 
 import (
 	"github.com/goctopus/silk"
@@ -34,6 +34,7 @@ func (user *Users) WhereName(value interface{}) *Users {
 func (user *Users) Save() {
 	user.DB.Insert(dialect.H{
 		"name": user.Name,
+		"id":   user.Id,
 	})
 	user.Clean()
 }
@@ -44,7 +45,9 @@ func (user *Users) All() []Users {
 
 func (user *Users) First() Users {
 	var u Users
-	user.DB.FormFirst(&u)
+	info, _ := user.DB.First()
+	u.Id = info["id"].(int64)
+	u.Name = string(info["name"].([]uint8))
 	user.Clean()
 	return u
 }
