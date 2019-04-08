@@ -10,7 +10,8 @@ import (
 	"strings"
 	"github.com/goctopus/silk/dialect"
 	"sync"
-	"huliao-go/module/utils"
+	"reflect"
+	"unicode"
 )
 
 type Where struct {
@@ -287,7 +288,7 @@ func (sql *Sql) FormFirst(v interface{}) error {
 		return err
 	}
 
-	utils.Transfer(data, v)
+	Transfer(data, v)
 
 	return nil
 }
@@ -315,4 +316,128 @@ func RecycleSql(sql *Sql) {
 	sql.Statement = ""
 
 	SqlPool.Put(sql)
+}
+
+func Transfer(sourceMap map[string]interface{}, targetStruct interface{}) error {
+	p := reflect.ValueOf(targetStruct)
+
+	if p.Kind() != reflect.Ptr || p.IsNil() {
+		return errors.New("wrong type")
+	}
+
+	v := reflect.Indirect(p)
+	t := v.Type()
+
+	var (
+		value interface{}
+		ok    bool
+	)
+
+	for i := 0; i < v.NumField(); i++ {
+		if v.Field(i).CanInterface() { // 判断是否为可导出字段
+			value, ok = sourceMap[t.Field(i).Name]
+			if !ok {
+				value, ok = sourceMap[Lcfirst(t.Field(i).Name)]
+				if ok {
+					switch v.Field(i).Type().String() {
+					case "string":
+						v.Field(i).SetString(InterfaceToString(value))
+					case "bool":
+						v.Field(i).SetBool(InterfaceToBool(value))
+					case "int":
+						v.Field(i).SetInt(InterfaceToInt64(value))
+					case "int64":
+						v.Field(i).SetInt(InterfaceToInt64(value))
+					case "int32":
+						v.Field(i).SetInt(InterfaceToInt64(value))
+					case "float32":
+						v.Field(i).SetFloat(InterfaceToFloat64(value))
+					case "float64":
+						v.Field(i).SetFloat(InterfaceToFloat64(value))
+					}
+				}
+			} else {
+				return errors.New("wrong map key")
+			}
+		} else {
+			return errors.New("wrong struct field")
+		}
+	}
+	return nil
+}
+
+
+func InterfaceToInt64(value interface{}) int64 {
+
+	if val, ok := value.(int64); ok {
+		return val
+	}
+
+	if val, ok := value.(float64); ok {
+		return int64(val)
+	}
+
+	if val, ok := value.(string); ok {
+		if valInt, err := strconv.ParseInt(val, 10, 64); err == nil {
+			return valInt
+		}
+
+		return 0
+	}
+
+	return 0
+}
+
+func InterfaceToFloat64(value interface{}) float64 {
+	if val, ok := value.(float64); ok {
+		return val
+	}
+
+	if val, ok := value.(string); ok {
+		if valFloat64, err := strconv.ParseFloat(val, 64); err == nil {
+			return valFloat64
+		}
+		return 0
+	}
+
+	return 0
+}
+
+func InterfaceToString(value interface{}) string {
+	if val, ok := value.(string); ok {
+		return val
+	}
+
+	return ""
+}
+
+func InterfaceToBool(value interface{}) bool {
+	if val, ok := value.(bool); ok {
+		return val
+	}
+
+	if val, ok := value.(string); ok {
+		if val == "true" {
+			return true
+		} else {
+			return false
+		}
+	}
+
+	if val, ok := value.(int64); ok {
+		if val > 0 {
+			return true
+		} else {
+			return false
+		}
+	}
+
+	return false
+}
+
+func Lcfirst(str string) string {
+	for i, v := range str {
+		return string(unicode.ToLower(v)) + str[i+1:]
+	}
+	return ""
 }
