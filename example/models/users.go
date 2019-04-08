@@ -47,13 +47,18 @@ func (user *Users) All() []UsersModel {
 	return make([]UsersModel, 0)
 }
 
+func (user *Users) Delete() {
+	user.DB.Delete()
+	user.Clean()
+}
+
 func (user *Users) First() UsersModel {
 	var u UsersModel
 	info, _ := user.DB.First()
 
 	if info != nil {
 		u.Id = info["id"].(int64)
-		u.Name = string(info["name"].([]uint8))
+		u.Name = info["name"].(string)
 		u.Exist = true
 	}
 

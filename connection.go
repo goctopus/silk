@@ -5,6 +5,8 @@ import (
 	"errors"
 	"fmt"
 	"strconv"
+	"regexp"
+	"strings"
 )
 
 // DB contains information for current db connection
@@ -105,10 +107,13 @@ func (db *DB) Query(query string, args ...interface{}) []map[string]interface{} 
 
 	results := make([]map[string]interface{}, 0)
 
+	r, _ := regexp.Compile("\\((.*)\\)")
+
 	for rs.Next() {
 		var colVar = make([]interface{}, len(col))
 		for i := 0; i < len(col); i++ {
-			SetColVarType(&colVar, i, typeVal[i].DatabaseTypeName())
+			typeName := strings.ToUpper(r.ReplaceAllString(typeVal[i].DatabaseTypeName(), ""))
+			SetColVarType(&colVar, i, typeName)
 		}
 		result := make(map[string]interface{})
 		if scanErr := rs.Scan(colVar...); scanErr != nil {
@@ -116,7 +121,8 @@ func (db *DB) Query(query string, args ...interface{}) []map[string]interface{} 
 			panic(scanErr)
 		}
 		for j := 0; j < len(col); j++ {
-			SetResultValue(&result, col[j], colVar[j], typeVal[j].DatabaseTypeName())
+			typeName := strings.ToUpper(r.ReplaceAllString(typeVal[j].DatabaseTypeName(), ""))
+			SetResultValue(&result, col[j], colVar[j], typeName)
 		}
 		results = append(results, result)
 	}
@@ -329,6 +335,9 @@ func SetResultValue(result *map[string]interface{}, index string, colVar interfa
 		} else {
 			(*result)[index] = nil
 		}
+	case "CHAR":
+		colVar2 := colVar.(*interface{})
+		(*result)[index] = string((*colVar2).([]uint8))
 	default:
 		if colVar2, ok := colVar.(*interface{}); ok {
 			if colVar, ok = (*colVar2).(int64); ok {
