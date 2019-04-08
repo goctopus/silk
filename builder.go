@@ -8,7 +8,7 @@ import (
 	"errors"
 	"strconv"
 	"strings"
-	"github.com/chenhg5/silk/dialect"
+	"github.com/goctopus/silk/dialect"
 	"sync"
 	"huliao-go/module/utils"
 )

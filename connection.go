@@ -34,9 +34,9 @@ func (db *DB) clone() *DB {
 //     }
 // GORM has wrapped some drivers, for easier to remember driver's import path, so you could import the mysql driver with
 //    import _ "github.com/jinzhu/gorm/dialects/mysql"
-//    // import _ "github.com/jinzhu/gorm/dialects/postgres"
-//    // import _ "github.com/jinzhu/gorm/dialects/sqlite"
-//    // import _ "github.com/jinzhu/gorm/dialects/mssql"
+//    // import _ "github.com/goctopus/drivers/postgres"
+//    // import _ "github.com/goctopus/drivers/sqlite"
+//    // import _ "github.com/goctopus/drivers/mssql"
 func Open(dialect string, args ...interface{}) (db *DB, err error) {
 	if len(args) == 0 {
 		err = errors.New("invalid database source")

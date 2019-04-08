@@ -1,7 +1,7 @@
 package silk
 
 import (
-	"github.com/chenhg5/silk/dialect"
+	"github.com/goctopus/silk/dialect"
 )
 
 type Dialect interface {

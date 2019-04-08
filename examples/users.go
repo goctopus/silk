@@ -1,8 +1,8 @@
 package examples
 
 import (
-	"github.com/chenhg5/silk"
-	"github.com/chenhg5/silk/dialect"
+	"github.com/goctopus/silk"
+	"github.com/goctopus/silk/dialect"
 )
 
 type Users struct {
