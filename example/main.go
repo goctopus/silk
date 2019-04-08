@@ -7,7 +7,7 @@ import (
 	"fmt"
 )
 
-func main()  {
+func main() {
 	silk.Open("sqlite3", "test.db")
 
 	user := models.NewUsers()

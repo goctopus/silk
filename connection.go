@@ -17,13 +17,17 @@ type DB struct {
 	dialect       Dialect
 	singularTable bool
 
-	Driver string
+	driver string
 }
 
 var DBInstance *DB
 
 func (db *DB) clone() *DB {
-	return db
+	return &DB{
+		db:      DBInstance.db,
+		dialect: DBInstance.dialect,
+		driver:  DBInstance.driver,
+	}
 }
 
 // Open initialize a new db connection, need to import driver first.
@@ -54,7 +58,7 @@ func Open(dialect string, args ...interface{}) (db *DB, err error) {
 	db = &DB{
 		db:      dbSQL,
 		dialect: GetDialectByDriver(dialect),
-		Driver:  dialect,
+		driver:  dialect,
 	}
 
 	if err != nil {

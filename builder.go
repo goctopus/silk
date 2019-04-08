@@ -14,32 +14,14 @@ import (
 	"unicode"
 )
 
-type Where struct {
-	operation string
-	field     string
-	qmark     string
-}
-
-type Join struct {
-	table     string
-	fieldA    string
-	operation string
-	fieldB    string
-}
-
-type RawUpdate struct {
-	expression string
-	args       []interface{}
-}
-
-type Sql struct {
+type Builder struct {
 	dialect.SqlComponent
 	connection *DB
 }
 
-var SqlPool = sync.Pool{
+var BuilderPool = sync.Pool{
 	New: func() interface{} {
-		return &Sql{
+		return &Builder{
 			SqlComponent: dialect.SqlComponent{
 				Fields:     make([]string, 0),
 				TableName:  "",
@@ -56,47 +38,47 @@ var SqlPool = sync.Pool{
 
 type H map[string]interface{}
 
-func newSql() *Sql {
-	return SqlPool.Get().(*Sql)
+func newBuilder() *Builder {
+	return BuilderPool.Get().(*Builder)
 }
 
 // *******************************
 // process method
 // *******************************
 
-func Table(table string) *Sql {
-	sql := newSql()
+func Table(table string) *Builder {
+	sql := newBuilder()
 	sql.TableName = table
 	sql.connection = DBInstance.clone()
 	return sql
 }
 
-func (sql *Sql) Table(table string) *Sql {
+func (sql *Builder) Table(table string) *Builder {
 	sql.TableName = table
 	return sql
 }
 
-func (sql *Sql) Select(fields ...string) *Sql {
+func (sql *Builder) Select(fields ...string) *Builder {
 	sql.Fields = fields
 	return sql
 }
 
-func (sql *Sql) OrderBy(filed string, order string) *Sql {
+func (sql *Builder) OrderBy(filed string, order string) *Builder {
 	sql.Order = "`" + filed + "` " + order
 	return sql
 }
 
-func (sql *Sql) Skip(offset int) *Sql {
+func (sql *Builder) Skip(offset int) *Builder {
 	sql.Offset = strconv.Itoa(offset)
 	return sql
 }
 
-func (sql *Sql) Take(take int) *Sql {
+func (sql *Builder) Take(take int) *Builder {
 	sql.Limit = strconv.Itoa(take)
 	return sql
 }
 
-func (sql *Sql) Where(field string, operation string, arg interface{}) *Sql {
+func (sql *Builder) Where(field string, operation string, arg interface{}) *Builder {
 	sql.Wheres = append(sql.Wheres, dialect.Where{
 		Field:     field,
 		Operation: operation,
@@ -106,7 +88,7 @@ func (sql *Sql) Where(field string, operation string, arg interface{}) *Sql {
 	return sql
 }
 
-func (sql *Sql) WhereIn(field string, arg []interface{}) *Sql {
+func (sql *Builder) WhereIn(field string, arg []interface{}) *Builder {
 	if len(arg) == 0 {
 		return sql
 	}
@@ -119,7 +101,7 @@ func (sql *Sql) WhereIn(field string, arg []interface{}) *Sql {
 	return sql
 }
 
-func (sql *Sql) WhereNotIn(field string, arg []interface{}) *Sql {
+func (sql *Builder) WhereNotIn(field string, arg []interface{}) *Builder {
 	if len(arg) == 0 {
 		return sql
 	}
@@ -132,11 +114,11 @@ func (sql *Sql) WhereNotIn(field string, arg []interface{}) *Sql {
 	return sql
 }
 
-func (sql *Sql) Find(arg interface{}) (map[string]interface{}, error) {
+func (sql *Builder) Find(arg interface{}) (map[string]interface{}, error) {
 	return sql.Where("id", "=", arg).First()
 }
 
-func (sql *Sql) Count() (int64, error) {
+func (sql *Builder) Count() (int64, error) {
 	var (
 		res map[string]interface{}
 		err error
@@ -147,13 +129,13 @@ func (sql *Sql) Count() (int64, error) {
 	return res["count(*)"].(int64), nil
 }
 
-func (sql *Sql) WhereRaw(raw string, args ...interface{}) *Sql {
+func (sql *Builder) WhereRaw(raw string, args ...interface{}) *Builder {
 	sql.WhereRaws = raw
 	sql.Args = append(sql.Args, args...)
 	return sql
 }
 
-func (sql *Sql) UpdateRaw(raw string, args ...interface{}) *Sql {
+func (sql *Builder) UpdateRaw(raw string, args ...interface{}) *Builder {
 	sql.UpdateRaws = append(sql.UpdateRaws, dialect.RawUpdate{
 		Expression: raw,
 		Args:       args,
@@ -161,7 +143,7 @@ func (sql *Sql) UpdateRaw(raw string, args ...interface{}) *Sql {
 	return sql
 }
 
-func (sql *Sql) LeftJoin(table string, fieldA string, operation string, fieldB string) *Sql {
+func (sql *Builder) LeftJoin(table string, fieldA string, operation string, fieldB string) *Builder {
 	sql.Leftjoins = append(sql.Leftjoins, dialect.Join{
 		FieldA:    fieldA,
 		FieldB:    fieldB,
@@ -178,7 +160,7 @@ func (sql *Sql) LeftJoin(table string, fieldA string, operation string, fieldB s
 // update ... => where ...
 // *******************************
 
-func (sql *Sql) First() (map[string]interface{}, error) {
+func (sql *Builder) First() (map[string]interface{}, error) {
 	defer RecycleSql(sql)
 
 	sql.connection.dialect.Select(&sql.SqlComponent)
@@ -191,7 +173,7 @@ func (sql *Sql) First() (map[string]interface{}, error) {
 	return res[0], nil
 }
 
-func (sql *Sql) All() ([]map[string]interface{}, error) {
+func (sql *Builder) All() ([]map[string]interface{}, error) {
 	defer RecycleSql(sql)
 
 	sql.connection.dialect.Select(&sql.SqlComponent)
@@ -201,7 +183,7 @@ func (sql *Sql) All() ([]map[string]interface{}, error) {
 	return res, nil
 }
 
-func (sql *Sql) ShowColumns() ([]map[string]interface{}, error) {
+func (sql *Builder) ShowColumns() ([]map[string]interface{}, error) {
 	defer RecycleSql(sql)
 
 	res := sql.connection.Query(sql.connection.dialect.ShowColumns(sql.TableName))
@@ -209,7 +191,7 @@ func (sql *Sql) ShowColumns() ([]map[string]interface{}, error) {
 	return res, nil
 }
 
-func (sql *Sql) ShowTables() ([]map[string]interface{}, error) {
+func (sql *Builder) ShowTables() ([]map[string]interface{}, error) {
 	defer RecycleSql(sql)
 
 	res := sql.connection.Query(sql.connection.dialect.ShowTables())
@@ -217,7 +199,7 @@ func (sql *Sql) ShowTables() ([]map[string]interface{}, error) {
 	return res, nil
 }
 
-func (sql *Sql) Update(values dialect.H) (int64, error) {
+func (sql *Builder) Update(values dialect.H) (int64, error) {
 	defer RecycleSql(sql)
 
 	sql.Values = values
@@ -233,7 +215,7 @@ func (sql *Sql) Update(values dialect.H) (int64, error) {
 	return res.LastInsertId()
 }
 
-func (sql *Sql) Delete() error {
+func (sql *Builder) Delete() error {
 	defer RecycleSql(sql)
 
 	sql.connection.dialect.Delete(&sql.SqlComponent)
@@ -247,7 +229,7 @@ func (sql *Sql) Delete() error {
 	return nil
 }
 
-func (sql *Sql) Exec() (int64, error) {
+func (sql *Builder) Exec() (int64, error) {
 	defer RecycleSql(sql)
 
 	sql.connection.dialect.Update(&sql.SqlComponent)
@@ -261,7 +243,7 @@ func (sql *Sql) Exec() (int64, error) {
 	return res.LastInsertId()
 }
 
-func (sql *Sql) Insert(values dialect.H) (int64, error) {
+func (sql *Builder) Insert(values dialect.H) (int64, error) {
 	defer RecycleSql(sql)
 
 	sql.Values = values
@@ -281,7 +263,7 @@ func (sql *Sql) Insert(values dialect.H) (int64, error) {
 // model method
 // *******************************
 
-func (sql *Sql) FormFirst(v interface{}) error {
+func (sql *Builder) FormFirst(v interface{}) error {
 	data, err := sql.First()
 
 	if err != nil {
@@ -293,7 +275,7 @@ func (sql *Sql) FormFirst(v interface{}) error {
 	return nil
 }
 
-func (sql *Sql) empty() *Sql {
+func (sql *Builder) empty() *Builder {
 	sql.Fields = make([]string, 0)
 	sql.Args = make([]interface{}, 0)
 	sql.TableName = ""
@@ -302,7 +284,7 @@ func (sql *Sql) empty() *Sql {
 	return sql
 }
 
-func RecycleSql(sql *Sql) {
+func RecycleSql(sql *Builder) {
 	sql.Fields = make([]string, 0)
 	sql.TableName = ""
 	sql.Wheres = make([]dialect.Where, 0)
@@ -315,7 +297,7 @@ func RecycleSql(sql *Sql) {
 	sql.UpdateRaws = make([]dialect.RawUpdate, 0)
 	sql.Statement = ""
 
-	SqlPool.Put(sql)
+	BuilderPool.Put(sql)
 }
 
 func Transfer(sourceMap map[string]interface{}, targetStruct interface{}) error {
