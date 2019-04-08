@@ -6,10 +6,14 @@ import (
 )
 
 type Users struct {
+	UsersModel
+	silk.Model
+}
+
+type UsersModel struct {
 	Name string `json:"name"`
 	Id   int64  `json:"id"`
-
-	silk.Model
+	Exist bool
 }
 
 func NewUsers() *Users {
@@ -39,15 +43,20 @@ func (user *Users) Save() {
 	user.Clean()
 }
 
-func (user *Users) All() []Users {
-	return make([]Users, 0)
+func (user *Users) All() []UsersModel {
+	return make([]UsersModel, 0)
 }
 
-func (user *Users) First() Users {
-	var u Users
+func (user *Users) First() UsersModel {
+	var u UsersModel
 	info, _ := user.DB.First()
-	u.Id = info["id"].(int64)
-	u.Name = string(info["name"].([]uint8))
+
+	if info != nil {
+		u.Id = info["id"].(int64)
+		u.Name = string(info["name"].([]uint8))
+		u.Exist = true
+	}
+
 	user.Clean()
 	return u
 }
