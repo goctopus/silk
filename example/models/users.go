@@ -49,6 +49,7 @@ func (user *Users) All() []UsersModel {
 
 func (user *Users) Delete() {
 	user.DB.Delete()
+	user.Clean()
 }
 
 func (user *Users) First() UsersModel {
