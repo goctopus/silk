@@ -19,4 +19,5 @@ func main() {
 
 	newUser := models.NewUsers().WhereId(1).First()
 	fmt.Println(newUser.Id, newUser.Name)
+	user.Delete()
 }
