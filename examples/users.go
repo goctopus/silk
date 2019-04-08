@@ -8,34 +8,34 @@ import (
 type Users struct {
 	Name string `json:"name"`
 	Id   int64  `json:"id"`
-	db   *silk.Sql
+
+	silk.Model
 }
 
 func NewUsers() *Users {
 	return &Users{
-		Name: "",
-		Id:   0,
-		db:   silk.Table("users"),
+		Model: silk.Model{
+			DB:    silk.Table("users"),
+			Table: "users",
+		},
 	}
 }
 
-func (user *Users) Where(field string, op string, value interface{}) *Users {
-	user.db = user.db.Where(field, op, value)
+func (user *Users) WhereId(value interface{}) *Users {
+	user.DB = user.Where("id", "=", value)
 	return user
 }
 
-func (user *Users) WhereId(value interface{}) *Users {
-	return user.Where("id", "=", value)
-}
-
 func (user *Users) WhereName(value interface{}) *Users {
-	return user.Where("name", "=", value)
+	user.DB = user.Where("name", "=", value)
+	return user
 }
 
 func (user *Users) Save() {
-	user.db.Insert(dialect.H{
+	user.DB.Insert(dialect.H{
 		"name": user.Name,
 	})
+	user.Clean()
 }
 
 func (user *Users) All() []Users {
@@ -44,6 +44,7 @@ func (user *Users) All() []Users {
 
 func (user *Users) First() Users {
 	var u Users
-	user.db.FormFirst(&u)
+	user.DB.FormFirst(&u)
+	user.Clean()
 	return u
 }
