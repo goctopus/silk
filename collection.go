@@ -1,69 +1,74 @@
 package silk
 
-type Collection map[string]interface{}
+type Collection []interface{}
 
-type Collections []Collection
+func Collect(src interface{}) Collection {
+	var c Collection
 
-func GetCollections(src []map[string]interface{}) Collections {
-	var c Collections
-	for _,v := range src {
-		c = append(c, v)
+	switch src.(type) {
+	case []map[string]interface{}:
+		for _,v := range src.([]map[string]interface{}) {
+			c = append(c, v)
+		}
+	default:
+		panic("wrong type")
 	}
+
 	return c
 }
 
-func (c Collections) Min(key string) interface{} {
+func (c Collection) Min(key interface{}) interface{} {
 	panic("implement it")
 }
 
-func (c Collections) Max(key string) interface{} {
+func (c Collection) Max(key interface{}) interface{} {
 	panic("implement it")
 }
 
-func (c Collections) Mode(key string) []interface{} {
+func (c Collection) Mode(key interface{}) []interface{} {
 	panic("implement it")
 }
 
-func (c Collections) Only(keys []string) Collections {
+func (c Collection) Only(keys []interface{}) Collection {
 	panic("implement it")
 }
 
-func (c Collections) Pluck(key string) []interface{} {
+func (c Collection) Pluck(key interface{}) []interface{} {
 	panic("implement it")
 }
 
-func (c Collections) Prepend(key string, value interface{}) Collections {
+func (c Collection) Prepend(key interface{}, value interface{}) Collection {
 	panic("implement it")
 }
 
-func (c Collections) Pull(key string) Collections {
+func (c Collection) Pull(key interface{}) Collection {
 	panic("implement it")
 }
 
-func (c Collections) Put(key string, value interface{}) Collections {
+func (c Collection) Put(key interface{}, value interface{}) Collection {
 	panic("implement it")
 }
 
-func (c Collections) SortBy(key string) Collections {
+func (c Collection) SortBy(key interface{}) Collection {
 	panic("implement it")
 }
 
-func (c Collections) Spice(index int) Collections {
+func (c Collection) Spice(index int) Collection {
 	panic("implement it")
 }
 
-func (c Collections) Sum(key string) interface{} {
+func (c Collection) Sum(key interface{}) interface{} {
 	panic("implement it")
 }
 
-func (c Collections) Take(num int) Collections {
+func (c Collection) Take(num int) Collection {
 	panic("implement it")
 }
 
-func (c Collections) Tojson() string {
+func (c Collection) Tojson() string {
 	panic("implement it")
 }
 
-func (c Collections) Where(key string, value interface{}) Collections {
+func (c Collection) Where(key interface{}, value interface{}) Collection {
 	panic("implement it")
 }

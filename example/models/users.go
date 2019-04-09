@@ -48,13 +48,8 @@ func (user *Users) All() []UsersModel {
 }
 
 func (user *Users) Collection() silk.Collection {
-	info, _ := user.DB.First()
-	return silk.Collection(info)
-}
-
-func (user *Users) Collections() silk.Collections {
 	info, _ := user.DB.All()
-	return silk.GetCollections(info)
+	return silk.Collect(info)
 }
 
 func (user *Users) Delete() {
