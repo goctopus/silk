@@ -19,5 +19,13 @@ func main() {
 
 	newUser := models.NewUsers().WhereId(1).First()
 	fmt.Println(newUser.Id, newUser.Name)
-	user.Delete()
+
+	user.Id = 2
+	user.Name = "张三"
+	user.Save()
+
+	// coll := models.NewUsers().WhereName("张三").Collections()
+	// fmt.Println(coll.Take(1).Tojson())
+
+	models.NewUsers().WhereName("张三").Delete()
 }
