@@ -11,8 +11,8 @@ type Users struct {
 }
 
 type UsersModel struct {
-	Name string `json:"name"`
-	Id   int64  `json:"id"`
+	Name  string `json:"name"`
+	Id    int64  `json:"id"`
 	Exist bool
 }
 
@@ -45,6 +45,16 @@ func (user *Users) Save() {
 
 func (user *Users) All() []UsersModel {
 	return make([]UsersModel, 0)
+}
+
+func (user *Users) Collection() silk.Collection {
+	info, _ := user.DB.First()
+	return silk.Collection(info)
+}
+
+func (user *Users) Collections() silk.Collections {
+	info, _ := user.DB.All()
+	return silk.GetCollections(info)
 }
 
 func (user *Users) Delete() {
