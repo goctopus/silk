@@ -167,11 +167,11 @@ func (c Collection) Mode(key ...string) []interface{} {
 	panic("implement it")
 }
 
-func (c Collection) Only(keys []interface{}) Collection {
+func (c Collection) Only(keys []string) Collection {
 	panic("implement it")
 }
 
-func (c Collection) Pluck(key interface{}) []interface{} {
+func (c Collection) Pluck(key string) []interface{} {
 	panic("implement it")
 }
 
