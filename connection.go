@@ -38,11 +38,14 @@ func Open(dialect string, args ...interface{}) (db *DB, err error) {
 		err = errors.New("invalid database source")
 		return nil, err
 	}
-	var source string
-	var dbSQL *sql.DB
-	var ownDbSQL bool
 
-	var driver = dialect
+	var (
+		source   string
+		dbSQL    *sql.DB
+		ownDbSQL bool
+		driver   = dialect
+	)
+
 	switch value := args[0].(type) {
 	case string:
 		if len(args) == 1 {

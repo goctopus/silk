@@ -24,8 +24,8 @@ func main() {
 	user.Name = "张三"
 	user.Save()
 
-	// coll := models.NewUsers().WhereName("张三").Collections()
-	// fmt.Println(coll.Take(1).Tojson())
+	//coll := models.NewUsers().WhereName("张三").Collection()
+	//fmt.Println(coll.Take(1).ToJson())
 
 	models.NewUsers().WhereName("张三").Delete()
 }
