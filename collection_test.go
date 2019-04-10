@@ -12,9 +12,9 @@ func TestCollection_Avg(t *testing.T) {
 }
 
 func TestNumber_Add(t *testing.T) {
-	a := GetNumberFromInt(5)
-	b := GetNumberFromInt(5)
-	c := GetNumberFromInt(3)
+	a := NewNumberFromInt64(5)
+	b := NewNumberFromInt64(5)
+	c := NewNumberFromInt64(3)
 
 	assert.Equal(t, a.Add(b).Reduce(c).ToInt64(), int64(7))
 }

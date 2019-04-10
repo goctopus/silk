@@ -14,11 +14,19 @@ func Collect(src interface{}) Collection {
 		}
 	case []int:
 		for _, v := range src.([]int) {
-			c = append(c, NewNumberFromInt(v))
+			c = append(c, NewNumberFromInt64(int64(v)))
+		}
+	case []int8:
+		for _, v := range src.([]int8) {
+			c = append(c, NewNumberFromInt64(int64(v)))
+		}
+	case []int16:
+		for _, v := range src.([]int16) {
+			c = append(c, NewNumberFromInt64(int64(v)))
 		}
 	case []int32:
 		for _, v := range src.([]int32) {
-			c = append(c, NewNumberFromInt32(v))
+			c = append(c, NewNumberFromInt64(int64(v)))
 		}
 	case []int64:
 		for _, v := range src.([]int64) {
@@ -26,7 +34,7 @@ func Collect(src interface{}) Collection {
 		}
 	case []float32:
 		for _, v := range src.([]float32) {
-			c = append(c, NewNumberFromFloat32(v))
+			c = append(c, NewNumberFromFloat64(float64(v)))
 		}
 	case []float64:
 		for _, v := range src.([]float64) {
@@ -44,11 +52,11 @@ func (c Collection) All() []interface{} {
 }
 
 func (c Collection) Avg(key ...interface{}) Number {
-	return c.Sum(key...).Divide(NewNumberFromInt(len(c)))
+	return c.Sum(key...).Divide(NewNumberFromInt64(int64(len(c))))
 }
 
 func (c Collection) Sum(key ...interface{}) Number {
-	var sum = NewNumberFromInt(0)
+	var sum = NewNumberFromInt64(0)
 
 	if len(key) == 0 {
 		for i := 0; i < len(c); i++ {
@@ -120,28 +128,7 @@ type Number struct {
 	value *float64
 }
 
-func NewNumberFromInt(a int) Number {
-	d := float64(a)
-	return Number{
-		value: &d,
-	}
-}
-
-func NewNumberFromInt32(a int32) Number {
-	d := float64(a)
-	return Number{
-		value: &d,
-	}
-}
-
 func NewNumberFromInt64(a int64) Number {
-	d := float64(a)
-	return Number{
-		value: &d,
-	}
-}
-
-func NewNumberFromFloat32(a float32) Number {
 	d := float64(a)
 	return Number{
 		value: &d,
