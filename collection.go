@@ -81,12 +81,84 @@ func (c Collection) Sum(key ...string) Number {
 	return sum
 }
 
-func (c Collection) Min(key ...string) interface{} {
-	panic("implement it")
+func (c Collection) Min(key ...string) Number {
+
+	var smallest = NewNumberFromInt64(0)
+
+	if len(key) == 0 {
+		for i := 0; i < len(c); i++ {
+			switch c[i].(type) {
+			case Number:
+				if i == 0 {
+					smallest.Value(c[i].(Number))
+					continue
+				}
+				if smallest.GreaterThan(c[i].(Number)) {
+					smallest.Value(c[i].(Number))
+				}
+			default:
+				continue
+			}
+		}
+	} else {
+		for i := 0; i < len(c); i++ {
+			switch c[i].(type) {
+			case map[string]interface{}:
+				number := NewNumberFromInterface(c[i].(map[string]interface{})[key[0]])
+				if i == 0 {
+					smallest.Value(number)
+					continue
+				}
+				if smallest.GreaterThan(number) {
+					smallest.Value(number)
+				}
+			default:
+				continue
+			}
+		}
+	}
+
+	return smallest
 }
 
-func (c Collection) Max(key ...string) interface{} {
-	panic("implement it")
+// 以上几个函数都是同样的模板，能不能抽出来变一个函数呢
+func (c Collection) Max(key ...string) Number {
+	var biggest = NewNumberFromInt64(0)
+
+	if len(key) == 0 {
+		for i := 0; i < len(c); i++ {
+			switch c[i].(type) {
+			case Number:
+				if i == 0 {
+					biggest.Value(c[i].(Number))
+					continue
+				}
+				if biggest.LessThan(c[i].(Number)) {
+					biggest.Value(c[i].(Number))
+				}
+			default:
+				continue
+			}
+		}
+	} else {
+		for i := 0; i < len(c); i++ {
+			switch c[i].(type) {
+			case map[string]interface{}:
+				number := NewNumberFromInterface(c[i].(map[string]interface{})[key[0]])
+				if i == 0 {
+					biggest.Value(number)
+					continue
+				}
+				if biggest.LessThan(number) {
+					biggest.Value(number)
+				}
+			default:
+				continue
+			}
+		}
+	}
+
+	return biggest
 }
 
 func (c Collection) Mode(key ...string) []interface{} {
@@ -189,6 +261,18 @@ func (n Number) Reduce(src Number) Number {
 func (n Number) Plus(src Number) Number {
 	*(n.value) *= *(src.value)
 	return n
+}
+
+func (n Number) GreaterThan(src Number) bool {
+	return *(n.value) > *(src.value)
+}
+
+func (n Number) LessThan(src Number) bool {
+	return *(n.value) < *(src.value)
+}
+
+func (n Number) Value(src Number) {
+	*(n.value) = *(src.value)
 }
 
 func (n Number) Divide(src Number) Number {
