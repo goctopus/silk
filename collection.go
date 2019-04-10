@@ -81,15 +81,15 @@ func (c Collection) Sum(key ...string) Number {
 	return sum
 }
 
-func (c Collection) Min(key ...interface{}) interface{} {
+func (c Collection) Min(key ...string) interface{} {
 	panic("implement it")
 }
 
-func (c Collection) Max(key ...interface{}) interface{} {
+func (c Collection) Max(key ...string) interface{} {
 	panic("implement it")
 }
 
-func (c Collection) Mode(key interface{}) []interface{} {
+func (c Collection) Mode(key ...string) []interface{} {
 	panic("implement it")
 }
 
@@ -101,7 +101,7 @@ func (c Collection) Pluck(key interface{}) []interface{} {
 	panic("implement it")
 }
 
-func (c Collection) Prepend(key interface{}, value interface{}) Collection {
+func (c Collection) Prepend(key string, value interface{}) Collection {
 	panic("implement it")
 }
 
@@ -109,11 +109,11 @@ func (c Collection) Pull(key interface{}) Collection {
 	panic("implement it")
 }
 
-func (c Collection) Put(key interface{}, value interface{}) Collection {
+func (c Collection) Put(key string, value interface{}) Collection {
 	panic("implement it")
 }
 
-func (c Collection) SortBy(key interface{}) Collection {
+func (c Collection) SortBy(key string) Collection {
 	panic("implement it")
 }
 
@@ -129,7 +129,7 @@ func (c Collection) ToJson() string {
 	panic("implement it")
 }
 
-func (c Collection) Where(key interface{}, value interface{}) Collection {
+func (c Collection) Where(key string, value interface{}) Collection {
 	panic("implement it")
 }
 
