@@ -85,28 +85,36 @@ func (c Collection) Sum(key ...string) decimal.Decimal {
 
 func (c Collection) Min(key ...string) decimal.Decimal {
 
-	var smallest = decimal.New(0, 0)
+	var (
+		smallest = decimal.New(0, 0)
+		ok       bool
+	)
 
 	if len(key) == 0 {
+
+		var v decimal.Decimal
+
 		for i := 0; i < len(c); i++ {
-			switch c[i].(type) {
-			case decimal.Decimal:
+			if v, ok = c[i].(decimal.Decimal); ok {
 				if i == 0 {
-					smallest = c[i].(decimal.Decimal)
+					smallest = v
 					continue
 				}
-				if smallest.GreaterThan(c[i].(decimal.Decimal)) {
-					smallest = c[i].(decimal.Decimal)
+				if smallest.GreaterThan(v) {
+					smallest = v
 				}
-			default:
-				continue
 			}
 		}
 	} else {
+
+		var (
+			m      map[string]interface{}
+			number decimal.Decimal
+		)
+
 		for i := 0; i < len(c); i++ {
-			switch c[i].(type) {
-			case map[string]interface{}:
-				number := NewDecimalFromInterface(c[i].(map[string]interface{})[key[0]])
+			if m, ok = c[i].(map[string]interface{}); ok {
+				number = NewDecimalFromInterface(m[key[0]])
 				if i == 0 {
 					smallest = number
 					continue
@@ -114,8 +122,6 @@ func (c Collection) Min(key ...string) decimal.Decimal {
 				if smallest.GreaterThan(number) {
 					smallest = number
 				}
-			default:
-				continue
 			}
 		}
 	}
@@ -123,30 +129,38 @@ func (c Collection) Min(key ...string) decimal.Decimal {
 	return smallest
 }
 
-// 以上几个函数都是同样的模板，能不能抽出来变一个函数呢
 func (c Collection) Max(key ...string) decimal.Decimal {
-	var biggest = decimal.New(0, 0)
+
+	var (
+		biggest = decimal.New(0, 0)
+		ok      bool
+	)
 
 	if len(key) == 0 {
+
+		var v decimal.Decimal
+
 		for i := 0; i < len(c); i++ {
-			switch c[i].(type) {
-			case decimal.Decimal:
+			if v, ok = c[i].(decimal.Decimal); ok {
 				if i == 0 {
-					biggest = c[i].(decimal.Decimal)
+					biggest = v
 					continue
 				}
-				if biggest.LessThan(c[i].(decimal.Decimal)) {
-					biggest = c[i].(decimal.Decimal)
+				if biggest.LessThan(v) {
+					biggest = v
 				}
-			default:
-				continue
 			}
 		}
 	} else {
+
+		var (
+			m      map[string]interface{}
+			number decimal.Decimal
+		)
+
 		for i := 0; i < len(c); i++ {
-			switch c[i].(type) {
-			case map[string]interface{}:
-				number := NewDecimalFromInterface(c[i].(map[string]interface{})[key[0]])
+			if m, ok = c[i].(map[string]interface{}); ok {
+				number = NewDecimalFromInterface(m[key[0]])
 				if i == 0 {
 					biggest = number
 					continue
@@ -154,8 +168,6 @@ func (c Collection) Max(key ...string) decimal.Decimal {
 				if biggest.LessThan(number) {
 					biggest = number
 				}
-			default:
-				continue
 			}
 		}
 	}
