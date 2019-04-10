@@ -51,11 +51,11 @@ func (c Collection) All() []interface{} {
 	return []interface{}(c)
 }
 
-func (c Collection) Avg(key ...interface{}) Number {
+func (c Collection) Avg(key ...string) Number {
 	return c.Sum(key...).Divide(NewNumberFromInt64(int64(len(c))))
 }
 
-func (c Collection) Sum(key ...interface{}) Number {
+func (c Collection) Sum(key ...string) Number {
 	var sum = NewNumberFromInt64(0)
 
 	if len(key) == 0 {
@@ -63,6 +63,15 @@ func (c Collection) Sum(key ...interface{}) Number {
 			switch c[i].(type) {
 			case Number:
 				sum.Add(c[i].(Number))
+			default:
+				continue
+			}
+		}
+	} else {
+		for i := 0; i < len(c); i++ {
+			switch c[i].(type) {
+			case map[string]interface{}:
+				sum.Add(NewNumberFromInterface(c[i].(map[string]interface{})[key[0]]))
 			default:
 				continue
 			}
@@ -126,6 +135,32 @@ func (c Collection) Where(key interface{}, value interface{}) Collection {
 
 type Number struct {
 	value *float64
+}
+
+func NewNumberFromInterface(a interface{}) Number {
+
+	var d float64
+
+	switch a.(type) {
+	case int:
+		d = float64(a.(int))
+	case int8:
+		d = float64(a.(int8))
+	case int16:
+		d = float64(a.(int16))
+	case int32:
+		d = float64(a.(int32))
+	case int64:
+		d = float64(a.(int64))
+	case float32:
+		d = float64(a.(float32))
+	case float64:
+		d = a.(float64)
+	}
+
+	return Number{
+		value: &d,
+	}
 }
 
 func NewNumberFromInt64(a int64) Number {
