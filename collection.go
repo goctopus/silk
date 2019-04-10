@@ -51,11 +51,11 @@ func (c Collection) All() []interface{} {
 	return []interface{}(c)
 }
 
-func (c Collection) Avg(key ...interface{}) Number {
+func (c Collection) Avg(key ...string) Number {
 	return c.Sum(key...).Divide(NewNumberFromInt64(int64(len(c))))
 }
 
-func (c Collection) Sum(key ...interface{}) Number {
+func (c Collection) Sum(key ...string) Number {
 	var sum = NewNumberFromInt64(0)
 
 	if len(key) == 0 {
@@ -67,20 +67,101 @@ func (c Collection) Sum(key ...interface{}) Number {
 				continue
 			}
 		}
+	} else {
+		for i := 0; i < len(c); i++ {
+			switch c[i].(type) {
+			case map[string]interface{}:
+				sum.Add(NewNumberFromInterface(c[i].(map[string]interface{})[key[0]]))
+			default:
+				continue
+			}
+		}
 	}
 
 	return sum
 }
 
-func (c Collection) Min(key ...interface{}) interface{} {
-	panic("implement it")
+func (c Collection) Min(key ...string) Number {
+
+	var smallest = NewNumberFromInt64(0)
+
+	if len(key) == 0 {
+		for i := 0; i < len(c); i++ {
+			switch c[i].(type) {
+			case Number:
+				if i == 0 {
+					smallest.Value(c[i].(Number))
+					continue
+				}
+				if smallest.GreaterThan(c[i].(Number)) {
+					smallest.Value(c[i].(Number))
+				}
+			default:
+				continue
+			}
+		}
+	} else {
+		for i := 0; i < len(c); i++ {
+			switch c[i].(type) {
+			case map[string]interface{}:
+				number := NewNumberFromInterface(c[i].(map[string]interface{})[key[0]])
+				if i == 0 {
+					smallest.Value(number)
+					continue
+				}
+				if smallest.GreaterThan(number) {
+					smallest.Value(number)
+				}
+			default:
+				continue
+			}
+		}
+	}
+
+	return smallest
 }
 
-func (c Collection) Max(key ...interface{}) interface{} {
-	panic("implement it")
+// 以上几个函数都是同样的模板，能不能抽出来变一个函数呢
+func (c Collection) Max(key ...string) Number {
+	var biggest = NewNumberFromInt64(0)
+
+	if len(key) == 0 {
+		for i := 0; i < len(c); i++ {
+			switch c[i].(type) {
+			case Number:
+				if i == 0 {
+					biggest.Value(c[i].(Number))
+					continue
+				}
+				if biggest.LessThan(c[i].(Number)) {
+					biggest.Value(c[i].(Number))
+				}
+			default:
+				continue
+			}
+		}
+	} else {
+		for i := 0; i < len(c); i++ {
+			switch c[i].(type) {
+			case map[string]interface{}:
+				number := NewNumberFromInterface(c[i].(map[string]interface{})[key[0]])
+				if i == 0 {
+					biggest.Value(number)
+					continue
+				}
+				if biggest.LessThan(number) {
+					biggest.Value(number)
+				}
+			default:
+				continue
+			}
+		}
+	}
+
+	return biggest
 }
 
-func (c Collection) Mode(key interface{}) []interface{} {
+func (c Collection) Mode(key ...string) []interface{} {
 	panic("implement it")
 }
 
@@ -92,7 +173,7 @@ func (c Collection) Pluck(key interface{}) []interface{} {
 	panic("implement it")
 }
 
-func (c Collection) Prepend(key interface{}, value interface{}) Collection {
+func (c Collection) Prepend(key string, value interface{}) Collection {
 	panic("implement it")
 }
 
@@ -100,11 +181,11 @@ func (c Collection) Pull(key interface{}) Collection {
 	panic("implement it")
 }
 
-func (c Collection) Put(key interface{}, value interface{}) Collection {
+func (c Collection) Put(key string, value interface{}) Collection {
 	panic("implement it")
 }
 
-func (c Collection) SortBy(key interface{}) Collection {
+func (c Collection) SortBy(key string) Collection {
 	panic("implement it")
 }
 
@@ -120,12 +201,38 @@ func (c Collection) ToJson() string {
 	panic("implement it")
 }
 
-func (c Collection) Where(key interface{}, value interface{}) Collection {
+func (c Collection) Where(key string, value interface{}) Collection {
 	panic("implement it")
 }
 
 type Number struct {
 	value *float64
+}
+
+func NewNumberFromInterface(a interface{}) Number {
+
+	var d float64
+
+	switch a.(type) {
+	case int:
+		d = float64(a.(int))
+	case int8:
+		d = float64(a.(int8))
+	case int16:
+		d = float64(a.(int16))
+	case int32:
+		d = float64(a.(int32))
+	case int64:
+		d = float64(a.(int64))
+	case float32:
+		d = float64(a.(float32))
+	case float64:
+		d = a.(float64)
+	}
+
+	return Number{
+		value: &d,
+	}
 }
 
 func NewNumberFromInt64(a int64) Number {
@@ -154,6 +261,18 @@ func (n Number) Reduce(src Number) Number {
 func (n Number) Plus(src Number) Number {
 	*(n.value) *= *(src.value)
 	return n
+}
+
+func (n Number) GreaterThan(src Number) bool {
+	return *(n.value) > *(src.value)
+}
+
+func (n Number) LessThan(src Number) bool {
+	return *(n.value) < *(src.value)
+}
+
+func (n Number) Value(src Number) {
+	*(n.value) = *(src.value)
 }
 
 func (n Number) Divide(src Number) Number {
