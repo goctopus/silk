@@ -3,7 +3,7 @@ package silk
 import "github.com/shopspring/decimal"
 
 // interface{} must be one type of:
-// decimal.Decimal, string, map[string]string, map[string]decimal.Decimal
+// decimal.Decimal, string, map[string]interface{}
 type Collection []interface{}
 
 func Collect(src interface{}) Collection {
@@ -12,6 +12,10 @@ func Collect(src interface{}) Collection {
 	switch src.(type) {
 	case []map[string]interface{}:
 		for _, v := range src.([]map[string]interface{}) {
+			c = append(c, v)
+		}
+	case []string:
+		for _, v := range src.([]string) {
 			c = append(c, v)
 		}
 	case []int:
