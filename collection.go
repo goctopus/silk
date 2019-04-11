@@ -73,6 +73,26 @@ func Collect(src interface{}) Collection {
 		}
 		c.value = f
 		c.length = len(src.([]float64))
+	case []interface{}:
+		s := src.([]interface{})
+		if len(s) > 0 {
+			switch s[0].(type) {
+			case string:
+				var ss = make([]string, 0)
+				for _, v := range s {
+					ss = append(ss, v.(string))
+				}
+				c.value = ss
+				c.length = len(ss)
+			default:
+				var d = make([]decimal.Decimal, 0)
+				for _, v := range s {
+					d = append(d, NewDecimalFromInterface(v))
+				}
+				c.value = d
+				c.length = len(d)
+			}
+		}
 	default:
 		panic("wrong type")
 	}
@@ -229,44 +249,526 @@ func (c Collection) Count() int {
 	return c.length
 }
 
+func (c Collection) Pluck(key string) Collection {
+	var s = make([]interface{}, 0)
+	if n, ok := c.value.([]map[string]interface{}); ok {
+		for i := 0; i < len(n); i++ {
+			s = append(s, n[i][key])
+		}
+	}
+	return Collect(s)
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-mode
 func (c Collection) Mode(key ...string) []interface{} {
 	panic("implement it")
 }
 
+// reference: https://laravel.com/docs/5.8/collections#method-only
 func (c Collection) Only(keys []string) Collection {
 	panic("implement it")
 }
 
-func (c Collection) Pluck(key string) []interface{} {
-	panic("implement it")
-}
-
+// reference: https://laravel.com/docs/5.8/collections#method-prepend
 func (c Collection) Prepend(key string, value interface{}) Collection {
 	panic("implement it")
 }
 
+// reference: https://laravel.com/docs/5.8/collections#method-pull
 func (c Collection) Pull(key interface{}) Collection {
 	panic("implement it")
 }
 
+// reference: https://laravel.com/docs/5.8/collections#method-put
 func (c Collection) Put(key string, value interface{}) Collection {
 	panic("implement it")
 }
 
+// reference: https://laravel.com/docs/5.8/collections#method-sortby
 func (c Collection) SortBy(key string) Collection {
 	panic("implement it")
 }
 
+// reference: https://laravel.com/docs/5.8/collections#method-spice
 func (c Collection) Spice(index int) Collection {
 	panic("implement it")
 }
 
+// reference: https://laravel.com/docs/5.8/collections#method-take
 func (c Collection) Take(num int) Collection {
 	panic("implement it")
 }
 
+// reference: https://laravel.com/docs/5.8/collections#method-average
+func (c Collection) Average() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-chunk
+func (c Collection) Chunk() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-collapse
+func (c Collection) Collapse() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-concat
+func (c Collection) Concat() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-contains
+func (c Collection) Contains() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-containsStrict
+func (c Collection) ContainsStrict() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-countBy
+func (c Collection) CountBy() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-crossJoin
+func (c Collection) CrossJoin() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-dd
+func (c Collection) Dd() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-diff
+func (c Collection) Diff() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-diffAssoc
+func (c Collection) DiffAssoc() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-diffKeys
+func (c Collection) DiffKeys() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-dump
+func (c Collection) Dump() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-each
+func (c Collection) Each() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-eachSpread
+func (c Collection) EachSpread() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-every
+func (c Collection) Every() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-except
+func (c Collection) Except() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-filter
+func (c Collection) Filter() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-first
+func (c Collection) First() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-firstWhere
+func (c Collection) FirstWhere() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-flatMap
+func (c Collection) FlatMap() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-flatten
+func (c Collection) Flatten() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-flip
+func (c Collection) Flip() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-forget
+func (c Collection) Forget() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-forPage
+func (c Collection) ForPage() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-get
+func (c Collection) Get() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-groupBy
+func (c Collection) GroupBy() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-has
+func (c Collection) Has() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-implode
+func (c Collection) Implode() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-intersect
+func (c Collection) Intersect() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-intersectByKeys
+func (c Collection) IntersectByKeys() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-isEmpty
+func (c Collection) IsEmpty() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-isNotEmpty
+func (c Collection) IsNotEmpty() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-keyBy
+func (c Collection) KeyBy() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-keys
+func (c Collection) Keys() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-last
+func (c Collection) Last() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-macro
+func (c Collection) Macro() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-make
+func (c Collection) Make() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-map
+func (c Collection) Map() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-mapInto
+func (c Collection) MapInto() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-mapSpread
+func (c Collection) MapSpread() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-mapToGroups
+func (c Collection) MapToGroups() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-mapWithKeys
+func (c Collection) MapWithKeys() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-median
+func (c Collection) Median() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-merge
+func (c Collection) Merge() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-nth
+func (c Collection) Nth() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-pad
+func (c Collection) Pad() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-partition
+func (c Collection) Partition() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-pipe
+func (c Collection) Pipe() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-pop
+func (c Collection) Pop() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-push
+func (c Collection) Push() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-random
+func (c Collection) Random() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-reduce
+func (c Collection) Reduce() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-reject
+func (c Collection) Reject() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-reverse
+func (c Collection) Reverse() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-search
+func (c Collection) Search() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-shift
+func (c Collection) Shift() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-shuffle
+func (c Collection) Shuffle() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-slice
+func (c Collection) Slice() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-some
+func (c Collection) Some() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-sort
+func (c Collection) Sort() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-sortByDesc
+func (c Collection) SortByDesc() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-sortKeys
+func (c Collection) SortKeys() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-sortKeysDesc
+func (c Collection) SortKeysDesc() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-splice
+func (c Collection) Splice() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-split
+func (c Collection) Split() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-tap
+func (c Collection) Tap() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-times
+func (c Collection) Times() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-transform
+func (c Collection) Transform() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-union
+func (c Collection) Union() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-unique
+func (c Collection) Unique() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-uniqueStrict
+func (c Collection) UniqueStrict() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-unless
+func (c Collection) Unless() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-unlessEmpty
+func (c Collection) UnlessEmpty() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-unlessNotEmpty
+func (c Collection) UnlessNotEmpty() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-unwrap
+func (c Collection) Unwrap() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-values
+func (c Collection) Values() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-when
+func (c Collection) When() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-whenEmpty
+func (c Collection) WhenEmpty() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-whenNotEmpty
+func (c Collection) WhenNotEmpty() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-whereStrict
+func (c Collection) WhereStrict() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-whereBetween
+func (c Collection) WhereBetween() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-whereIn
+func (c Collection) WhereIn() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-whereInStrict
+func (c Collection) WhereInStrict() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-whereInstanceOf
+func (c Collection) WhereInstanceOf() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-whereNotBetween
+func (c Collection) WhereNotBetween() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-whereNotIn
+func (c Collection) WhereNotIn() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-whereNotInStrict
+func (c Collection) WhereNotInStrict() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-wrap
+func (c Collection) Wrap() {
+	panic("implement it")
+}
+
+// reference: https://laravel.com/docs/5.8/collections#method-zip
+func (c Collection) Zip() {
+	panic("implement it")
+}
+
+
+
 func (c Collection) ToJson() string {
 	panic("implement it")
+}
+
+func (c Collection) ToNumberArray() []decimal.Decimal {
+	if m, ok := c.value.([]decimal.Decimal); ok {
+		return m
+	} else {
+		return []decimal.Decimal{}
+	}
+}
+
+func (c Collection) ToStringArray() []string {
+	if m, ok := c.value.([]string); ok {
+		return m
+	} else {
+		return []string{}
+	}
 }
 
 func (c Collection) ToMap() map[string]interface{} {
@@ -274,6 +776,14 @@ func (c Collection) ToMap() map[string]interface{} {
 		return m
 	} else {
 		return map[string]interface{}{}
+	}
+}
+
+func (c Collection) ToMapArray() []map[string]interface{} {
+	if m, ok := c.value.([]map[string]interface{}); ok {
+		return m
+	} else {
+		return []map[string]interface{}{}
 	}
 }
 
