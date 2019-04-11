@@ -5,9 +5,12 @@ import (
 	"github.com/goctopus/silk/dialect"
 )
 
-type Users struct {
+type UsersBuilder struct {
 	UsersModel
-	silk.Model
+
+	db *silk.Builder
+
+	Table string
 }
 
 type UsersModel struct {
@@ -16,50 +19,56 @@ type UsersModel struct {
 	Exist bool
 }
 
-func NewUsers() *Users {
-	return &Users{
-		Model: silk.Model{
-			DB:    silk.Table("users"),
-			Table: "users",
-		},
+func Users() *UsersBuilder {
+	return &UsersBuilder{
+		db:    silk.Table("users"),
+		Table: "users",
 	}
 }
 
-func (user *Users) WhereId(value interface{}) *Users {
-	user.DB = user.Where("id", "=", value)
-	return user
+func (builder *UsersBuilder) Clean() {
+	builder.db = silk.Table(builder.Table)
 }
 
-func (user *Users) WhereName(value interface{}) *Users {
-	user.DB = user.Where("name", "=", value)
-	return user
+func (builder *UsersBuilder) Where(field string, op string, value interface{}) *silk.Builder {
+	return builder.db.Where(field, op, value)
 }
 
-func (user *Users) Save() {
-	user.DB.Insert(dialect.H{
-		"name": user.Name,
-		"id":   user.Id,
+func (builder *UsersBuilder) WhereId(value interface{}) *UsersBuilder {
+	builder.db = builder.Where("id", "=", value)
+	return builder
+}
+
+func (builder *UsersBuilder) WhereName(value interface{}) *UsersBuilder {
+	builder.db = builder.Where("name", "=", value)
+	return builder
+}
+
+func (builder *UsersBuilder) Save() {
+	builder.db.Insert(dialect.H{
+		"name": builder.Name,
+		"id":   builder.Id,
 	})
-	user.Clean()
+	builder.Clean()
 }
 
-func (user *Users) All() []UsersModel {
+func (builder *UsersBuilder) All() []UsersModel {
 	return make([]UsersModel, 0)
 }
 
-func (user *Users) Collection() silk.Collection {
-	info, _ := user.DB.All()
+func (builder *UsersBuilder) Collection() silk.Collection {
+	info, _ := builder.db.All()
 	return silk.Collect(info)
 }
 
-func (user *Users) Delete() {
-	user.DB.Delete()
-	user.Clean()
+func (builder *UsersBuilder) Delete() {
+	builder.db.Delete()
+	builder.Clean()
 }
 
-func (user *Users) First() UsersModel {
+func (builder *UsersBuilder) First() UsersModel {
 	var u UsersModel
-	info, _ := user.DB.First()
+	info, _ := builder.db.First()
 
 	if info != nil {
 		u.Id = info["id"].(int64)
@@ -67,6 +76,6 @@ func (user *Users) First() UsersModel {
 		u.Exist = true
 	}
 
-	user.Clean()
+	builder.Clean()
 	return u
 }

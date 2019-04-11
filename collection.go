@@ -266,7 +266,24 @@ func (c Collection) Mode(key ...string) []interface{} {
 
 // reference: https://laravel.com/docs/5.8/collections#method-only
 func (c Collection) Only(keys []string) Collection {
-	panic("implement it")
+	if n, ok := c.value.(map[string]interface{}); ok {
+		var m = make(map[string]interface{}, 0)
+		for _, k := range keys {
+			m[k] = n[k]
+		}
+		c.value = m
+	} else if n, ok := c.value.([]map[string]interface{}); ok {
+		var ma = make([]map[string]interface{}, 0)
+		for _, k := range keys {
+			m := make(map[string]interface{}, 0)
+			for _, v := range n {
+				m[k] = v[k]
+			}
+			ma = append(ma, m)
+		}
+		c.value = ma
+	}
+	return c
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-prepend
@@ -748,8 +765,6 @@ func (c Collection) Wrap() {
 func (c Collection) Zip() {
 	panic("implement it")
 }
-
-
 
 func (c Collection) ToJson() string {
 	panic("implement it")
