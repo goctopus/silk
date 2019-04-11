@@ -76,3 +76,18 @@ func TestCollection_Combine(t *testing.T) {
 
 	assert.Equal(t, a.Combine(b).ToMap()["name"], "John")
 }
+
+func TestCollection_Pluck(t *testing.T) {
+	a := []map[string]interface{}{
+		{
+			"foo": 10,
+		},{
+			"foo": 30,
+		},{
+			"foo": 20,
+		},{
+			"foo": 40,
+		},
+	}
+	assert.Equal(t, Collect(a).Pluck("foo").ToNumberArray()[0].IntPart(), int64(10))
+}
