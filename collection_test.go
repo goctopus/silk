@@ -63,3 +63,16 @@ func TestCollection_Min(t *testing.T) {
 
 	assert.Equal(t, Collect(b).Min("foo").IntPart(), int64(10))
 }
+
+func TestCollection_Join(t *testing.T) {
+	a := []string{"h", "e", "l", "l", "o"}
+
+	assert.Equal(t, Collect(a).Join(""), "hello")
+}
+
+func TestCollection_Combine(t *testing.T) {
+	a := Collect([]string{"name", "age"})
+	b := []interface{}{"John", 18}
+
+	assert.Equal(t, a.Combine(b).ToMap()["name"], "John")
+}
