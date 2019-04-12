@@ -8,10 +8,10 @@ import (
 //
 // interface{} must be one type of:
 //
-// []decimal.Decimal,
-// []string,
-// []map[string]interface{},
-// map[string]interface{}
+// 		[]decimal.Decimal,
+// 		[]string,
+// 		[]map[string]interface{},
+// 		map[string]interface{}
 //
 type Collection struct {
 	value  interface{}
@@ -846,6 +846,16 @@ func NewDecimalFromInterface(a interface{}) decimal.Decimal {
 	var d decimal.Decimal
 
 	switch a.(type) {
+	case uint:
+		d = decimal.New(int64(a.(uint)), 0)
+	case uint8:
+		d = decimal.New(int64(a.(uint8)), 0)
+	case uint16:
+		d = decimal.New(int64(a.(uint16)), 0)
+	case uint32:
+		d = decimal.New(int64(a.(uint32)), 0)
+	case uint64:
+		d = decimal.New(int64(a.(uint64)), 0)
 	case int:
 		d = decimal.New(int64(a.(int)), 0)
 	case int8:
@@ -860,6 +870,8 @@ func NewDecimalFromInterface(a interface{}) decimal.Decimal {
 		d = decimal.NewFromFloat32(a.(float32))
 	case float64:
 		d = decimal.NewFromFloat(a.(float64))
+	default:
+		panic("wrong type")
 	}
 
 	return d
