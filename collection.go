@@ -237,6 +237,7 @@ func (c Collection) Combine(value []interface{}) Collection {
 	var (
 		m      = make(map[string]interface{}, 0)
 		length = c.length
+		d      Collection
 	)
 
 	if length > len(value) {
@@ -249,7 +250,10 @@ func (c Collection) Combine(value []interface{}) Collection {
 		}
 	}
 
-	return Collect(m)
+	d.value = m
+	d.length = len(m)
+
+	return d
 }
 
 func (c Collection) Count() int {
