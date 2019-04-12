@@ -6,11 +6,11 @@ package silk
 
 import (
 	"errors"
+	"github.com/goctopus/silk/dialect"
+	"reflect"
 	"strconv"
 	"strings"
-	"github.com/goctopus/silk/dialect"
 	"sync"
-	"reflect"
 	"unicode"
 )
 
@@ -347,7 +347,6 @@ func Transfer(sourceMap map[string]interface{}, targetStruct interface{}) error 
 	}
 	return nil
 }
-
 
 func InterfaceToInt64(value interface{}) int64 {
 
