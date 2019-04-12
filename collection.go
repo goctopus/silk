@@ -4,8 +4,15 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// Collection is a data structure contains useful functions. It is immutable.
+//
 // interface{} must be one type of:
-// []decimal.Decimal, []string, []map[string]interface{}, map[string]interface{}
+//
+// []decimal.Decimal,
+// []string,
+// []map[string]interface{},
+// map[string]interface{}
+//
 type Collection struct {
 	value  interface{}
 	length int
@@ -266,12 +273,13 @@ func (c Collection) Mode(key ...string) []interface{} {
 
 // reference: https://laravel.com/docs/5.8/collections#method-only
 func (c Collection) Only(keys []string) Collection {
+	var d Collection
 	if n, ok := c.value.(map[string]interface{}); ok {
 		var m = make(map[string]interface{}, 0)
 		for _, k := range keys {
 			m[k] = n[k]
 		}
-		c.value = m
+		d.value = m
 	} else if n, ok := c.value.([]map[string]interface{}); ok {
 		var ma = make([]map[string]interface{}, 0)
 		for _, k := range keys {
@@ -281,9 +289,10 @@ func (c Collection) Only(keys []string) Collection {
 			}
 			ma = append(ma, m)
 		}
-		c.value = ma
+		d.value = ma
 	}
-	return c
+	d.length = c.length
+	return d
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-prepend

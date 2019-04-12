@@ -68,14 +68,8 @@ func (builder *UsersBuilder) Delete() {
 
 func (builder *UsersBuilder) First() UsersModel {
 	var u UsersModel
-	info, _ := builder.db.First()
-
-	if info != nil {
-		u.Id = info["id"].(int64)
-		u.Name = info["name"].(string)
-		u.Exist = true
-	}
-
+	builder.db.FormFirst(&u)
+	u.Exist = true
 	builder.Clean()
 	return u
 }
