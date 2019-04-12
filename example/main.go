@@ -1,10 +1,10 @@
 package main
 
 import (
-	_ "github.com/goctopus/silk/dirvers/sqlite"
-	"github.com/goctopus/silk"
-	"github.com/goctopus/silk/example/models"
 	"fmt"
+	"github.com/goctopus/silk"
+	_ "github.com/goctopus/silk/drivers/sqlite"
+	"github.com/goctopus/silk/example/models"
 )
 
 func main() {

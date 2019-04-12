@@ -280,6 +280,7 @@ func (c Collection) Only(keys []string) Collection {
 			m[k] = n[k]
 		}
 		d.value = m
+		d.length = len(m)
 	} else if n, ok := c.value.([]map[string]interface{}); ok {
 		var ma = make([]map[string]interface{}, 0)
 		for _, k := range keys {
@@ -290,14 +291,36 @@ func (c Collection) Only(keys []string) Collection {
 			ma = append(ma, m)
 		}
 		d.value = ma
+		d.length = len(ma)
 	}
-	d.length = c.length
+
 	return d
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-prepend
-func (c Collection) Prepend(key string, value interface{}) Collection {
-	panic("implement it")
+func (c Collection) Prepend(values ...interface{}) Collection {
+	var d Collection
+	if len(values) == 1 {
+		if n, ok := c.value.([]string); ok {
+			n = append([]string{values[0].(string)}, n...)
+			d.value = n
+			d.length = len(n)
+		} else if n, ok := c.value.([]decimal.Decimal); ok {
+			n = append([]decimal.Decimal{NewDecimalFromInterface(values[0])}, n...)
+			d.value = n
+			d.length = len(n)
+		}
+	} else if len(values) == 2 {
+		if n, ok := c.value.(map[string]interface{}); ok {
+			n[values[0].(string)] = values[1]
+			d.value = n
+			d.length = len(n)
+		}
+	} else {
+		panic("wrong parameter")
+	}
+
+	return d
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-pull
