@@ -17,3 +17,7 @@
 - [ ] hook支持
 - [ ] 事务支持
 - [ ] 模型关系支持
+
+## 如何参与开发
+
+[如何参与开发](https://github.com/goctopus/silk/blob/master/CONTRIBUTING.md)
