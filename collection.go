@@ -4,8 +4,15 @@ import (
 	"github.com/shopspring/decimal"
 )
 
+// Collection is a data structure contains useful functions. It is immutable.
+//
 // interface{} must be one type of:
-// []decimal.Decimal, []string, []map[string]interface{}, map[string]interface{}
+//
+// []decimal.Decimal,
+// []string,
+// []map[string]interface{},
+// map[string]interface{}
+//
 type Collection struct {
 	value  interface{}
 	length int
@@ -230,6 +237,7 @@ func (c Collection) Combine(value []interface{}) Collection {
 	var (
 		m      = make(map[string]interface{}, 0)
 		length = c.length
+		d      Collection
 	)
 
 	if length > len(value) {
@@ -242,7 +250,10 @@ func (c Collection) Combine(value []interface{}) Collection {
 		}
 	}
 
-	return Collect(m)
+	d.value = m
+	d.length = len(m)
+
+	return d
 }
 
 func (c Collection) Count() int {
@@ -266,12 +277,14 @@ func (c Collection) Mode(key ...string) []interface{} {
 
 // reference: https://laravel.com/docs/5.8/collections#method-only
 func (c Collection) Only(keys []string) Collection {
+	var d Collection
 	if n, ok := c.value.(map[string]interface{}); ok {
 		var m = make(map[string]interface{}, 0)
 		for _, k := range keys {
 			m[k] = n[k]
 		}
-		c.value = m
+		d.value = m
+		d.length = len(m)
 	} else if n, ok := c.value.([]map[string]interface{}); ok {
 		var ma = make([]map[string]interface{}, 0)
 		for _, k := range keys {
@@ -281,51 +294,47 @@ func (c Collection) Only(keys []string) Collection {
 			}
 			ma = append(ma, m)
 		}
-		c.value = ma
+		d.value = ma
+		d.length = len(ma)
 	}
-	return c
+
+	return d
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-prepend
-func (c Collection) Prepend(key string, value interface{}) Collection {
-
-	arr := make(map[string]interface{}, 0)
-	arr[key] = value
-	if n, ok := c.value.(map[string]interface{}); ok {
-		for i, v := range n {
-			arr[i] = v
+func (c Collection) Prepend(values ...interface{}) Collection {
+	var d Collection
+	if len(values) == 1 {
+		if n, ok := c.value.([]string); ok {
+			n = append([]string{values[0].(string)}, n...)
+			d.value = n
+			d.length = len(n)
+		} else if n, ok := c.value.([]decimal.Decimal); ok {
+			n = append([]decimal.Decimal{NewDecimalFromInterface(values[0])}, n...)
+			d.value = n
+			d.length = len(n)
 		}
+	} else if len(values) == 2 {
+		if n, ok := c.value.(map[string]interface{}); ok {
+			n[values[0].(string)] = values[1]
+			d.value = n
+			d.length = len(n)
+		}
+	} else {
+		panic("wrong parameter")
 	}
-	return Collect(arr)
+
+	return d
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-pull
 func (c Collection) Pull(key interface{}) Collection {
-	arr := make(map[string]interface{}, 0)
-	if n, ok := c.value.(map[string]interface{}); ok {
-		for i, v := range n {
-			if (i == key) {
-				continue
-			} else
-			{
-				arr[i] = v
-			}
-
-		}
-	}
-	return Collect(arr)
+	panic("implement it")
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-put
 func (c Collection) Put(key string, value interface{}) Collection {
-	arr := make(map[string]interface{}, 0)
-
-	if n, ok := c.value.(map[string]interface{}); ok {
-		arr = n
-		arr[key] = value
-	}
-
-	return Collect(arr)
+	panic("implement it")
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-sortby

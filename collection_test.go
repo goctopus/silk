@@ -1,8 +1,8 @@
 package silk
 
 import (
-	"testing"
 	"github.com/magiconair/properties/assert"
+	"testing"
 )
 
 func TestCollection_Avg(t *testing.T) {
@@ -104,4 +104,10 @@ func TestCollection_Only(t *testing.T) {
 		"name":  "Desk",
 		"price": 100,
 	})
+}
+
+func TestCollection_Prepend(t *testing.T) {
+	a := []int{1, 2, 3, 4, 5}
+
+	assert.Equal(t, Collect(a).Prepend(0).ToNumberArray()[0].IntPart(), int64(0))
 }

@@ -43,7 +43,6 @@ func (CommonDialect) ShowTables() string {
 	return "show tables"
 }
 
-
 type H map[string]interface{}
 
 type SqlComponent struct {
