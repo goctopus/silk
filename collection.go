@@ -288,17 +288,44 @@ func (c Collection) Only(keys []string) Collection {
 
 // reference: https://laravel.com/docs/5.8/collections#method-prepend
 func (c Collection) Prepend(key string, value interface{}) Collection {
-	panic("implement it")
+
+	arr := make(map[string]interface{}, 0)
+	arr[key] = value
+	if n, ok := c.value.(map[string]interface{}); ok {
+		for i, v := range n {
+			arr[i] = v
+		}
+	}
+	return Collect(arr)
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-pull
 func (c Collection) Pull(key interface{}) Collection {
-	panic("implement it")
+	arr := make(map[string]interface{}, 0)
+	if n, ok := c.value.(map[string]interface{}); ok {
+		for i, v := range n {
+			if (i == key) {
+				continue
+			} else
+			{
+				arr[i] = v
+			}
+
+		}
+	}
+	return Collect(arr)
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-put
 func (c Collection) Put(key string, value interface{}) Collection {
-	panic("implement it")
+	arr := make(map[string]interface{}, 0)
+
+	if n, ok := c.value.(map[string]interface{}); ok {
+		arr = n
+		arr[key] = value
+	}
+
+	return Collect(arr)
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-sortby
