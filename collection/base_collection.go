@@ -11,7 +11,7 @@ func (c BaseCollection) All() []interface{} {
 }
 
 func (c BaseCollection) Avg(key ...string) decimal.Decimal {
-	panic("not implement")
+	return c.Sum(key...).Div(decimal.New(int64(c.length), 0))
 }
 
 func (c BaseCollection) Sum(key ...string) decimal.Decimal {
