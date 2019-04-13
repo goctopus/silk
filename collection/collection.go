@@ -348,3 +348,38 @@ type Collection interface {
 
 	Where(key string, value interface{}) Collection
 }
+
+func NewDecimalFromInterface(a interface{}) decimal.Decimal {
+	var d decimal.Decimal
+
+	switch a.(type) {
+	case uint:
+		d = decimal.New(int64(a.(uint)), 0)
+	case uint8:
+		d = decimal.New(int64(a.(uint8)), 0)
+	case uint16:
+		d = decimal.New(int64(a.(uint16)), 0)
+	case uint32:
+		d = decimal.New(int64(a.(uint32)), 0)
+	case uint64:
+		d = decimal.New(int64(a.(uint64)), 0)
+	case int:
+		d = decimal.New(int64(a.(int)), 0)
+	case int8:
+		d = decimal.New(int64(a.(int8)), 0)
+	case int16:
+		d = decimal.New(int64(a.(int16)), 0)
+	case int32:
+		d = decimal.New(int64(a.(int32)), 0)
+	case int64:
+		d = decimal.New(a.(int64), 0)
+	case float32:
+		d = decimal.NewFromFloat32(a.(float32))
+	case float64:
+		d = decimal.NewFromFloat(a.(float64))
+	default:
+		panic("wrong type")
+	}
+
+	return d
+}

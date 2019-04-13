@@ -18,5 +18,31 @@ func (c StringArrayCollection) Join(delimiter string) string {
 }
 
 func (c StringArrayCollection) Combine(value []interface{}) Collection {
-	panic("implement me")
+	var (
+		m      = make(map[string]interface{}, 0)
+		length = c.length
+		d      MapCollection
+	)
+
+	if length > len(value) {
+		length = len(value)
+	}
+
+	for i := 0; i < length; i++ {
+		m[c.value[i]] = value[i]
+	}
+
+	d.value = m
+	d.length = len(m)
+
+	return d
+}
+
+func (c StringArrayCollection) Prepend(values ...interface{}) Collection {
+	var d StringArrayCollection
+
+	d.value = append([]string{values[0].(string)}, c.value...)
+	d.length = len(d.value)
+
+	return d
 }
