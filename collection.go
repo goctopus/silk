@@ -8,10 +8,10 @@ import (
 //
 // interface{} must be one type of:
 //
-// []decimal.Decimal,
-// []string,
-// []map[string]interface{},
-// map[string]interface{}
+// 		[]decimal.Decimal,
+// 		[]string,
+// 		[]map[string]interface{},
+// 		map[string]interface{}
 //
 type Collection struct {
 	value  interface{}
@@ -32,51 +32,51 @@ func Collect(src interface{}) Collection {
 		c.value = src
 		c.length = len(src.(map[string]interface{}))
 	case []int:
-		var d = make([]decimal.Decimal, 0)
-		for _, v := range src.([]int) {
-			d = append(d, decimal.New(int64(v), 0))
+		var d = make([]decimal.Decimal, len(src.([]int)))
+		for k, v := range src.([]int) {
+			d[k] = decimal.New(int64(v), 0)
 		}
 		c.value = d
 		c.length = len(src.([]int))
 	case []int8:
-		var d = make([]decimal.Decimal, 0)
-		for _, v := range src.([]int8) {
-			d = append(d, decimal.New(int64(v), 0))
+		var d = make([]decimal.Decimal, len(src.([]int8)))
+		for k, v := range src.([]int8) {
+			d[k] = decimal.New(int64(v), 0)
 		}
 		c.value = d
 		c.length = len(src.([]int8))
 	case []int16:
-		var d = make([]decimal.Decimal, 0)
-		for _, v := range src.([]int16) {
-			d = append(d, decimal.New(int64(v), 0))
+		var d = make([]decimal.Decimal, len(src.([]int16)))
+		for k, v := range src.([]int16) {
+			d[k] = decimal.New(int64(v), 0)
 		}
 		c.value = d
 		c.length = len(src.([]int16))
 	case []int32:
-		var d = make([]decimal.Decimal, 0)
-		for _, v := range src.([]int32) {
-			d = append(d, decimal.New(int64(v), 0))
+		var d = make([]decimal.Decimal, len(src.([]int32)))
+		for k, v := range src.([]int32) {
+			d[k] = decimal.New(int64(v), 0)
 		}
 		c.value = d
 		c.length = len(src.([]int32))
 	case []int64:
-		var d = make([]decimal.Decimal, 0)
-		for _, v := range src.([]int64) {
-			d = append(d, decimal.New(v, 0))
+		var d = make([]decimal.Decimal, len(src.([]int64)))
+		for k, v := range src.([]int64) {
+			d[k] = decimal.New(v, 0)
 		}
 		c.value = d
 		c.length = len(src.([]int64))
 	case []float32:
-		var f = make([]decimal.Decimal, 0)
-		for _, v := range src.([]float32) {
-			f = append(f, decimal.NewFromFloat32(v))
+		var f = make([]decimal.Decimal, len(src.([]float32)))
+		for k, v := range src.([]float32) {
+			f[k] = decimal.NewFromFloat32(v)
 		}
 		c.value = f
 		c.length = len(src.([]float32))
 	case []float64:
-		var f = make([]decimal.Decimal, 0)
-		for _, v := range src.([]float64) {
-			f = append(f, decimal.NewFromFloat(v))
+		var f = make([]decimal.Decimal, len(src.([]float64)))
+		for k, v := range src.([]float64) {
+			f[k] = decimal.NewFromFloat(v)
 		}
 		c.value = f
 		c.length = len(src.([]float64))
@@ -85,16 +85,16 @@ func Collect(src interface{}) Collection {
 		if len(s) > 0 {
 			switch s[0].(type) {
 			case string:
-				var ss = make([]string, 0)
-				for _, v := range s {
-					ss = append(ss, v.(string))
+				var ss = make([]string, len(s))
+				for k, v := range s {
+					ss[k] = v.(string)
 				}
 				c.value = ss
 				c.length = len(ss)
 			default:
-				var d = make([]decimal.Decimal, 0)
-				for _, v := range s {
-					d = append(d, NewDecimalFromInterface(v))
+				var d = make([]decimal.Decimal, len(s))
+				for k, v := range s {
+					d[k] = NewDecimalFromInterface(v)
 				}
 				c.value = d
 				c.length = len(d)
@@ -846,6 +846,16 @@ func NewDecimalFromInterface(a interface{}) decimal.Decimal {
 	var d decimal.Decimal
 
 	switch a.(type) {
+	case uint:
+		d = decimal.New(int64(a.(uint)), 0)
+	case uint8:
+		d = decimal.New(int64(a.(uint8)), 0)
+	case uint16:
+		d = decimal.New(int64(a.(uint16)), 0)
+	case uint32:
+		d = decimal.New(int64(a.(uint32)), 0)
+	case uint64:
+		d = decimal.New(int64(a.(uint64)), 0)
 	case int:
 		d = decimal.New(int64(a.(int)), 0)
 	case int8:
@@ -860,6 +870,8 @@ func NewDecimalFromInterface(a interface{}) decimal.Decimal {
 		d = decimal.NewFromFloat32(a.(float32))
 	case float64:
 		d = decimal.NewFromFloat(a.(float64))
+	default:
+		panic("wrong type")
 	}
 
 	return d
