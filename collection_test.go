@@ -1,6 +1,7 @@
 package silk
 
 import (
+	"fmt"
 	"github.com/magiconair/properties/assert"
 	"testing"
 )
@@ -73,4 +74,49 @@ func TestCollection_Prepend(t *testing.T) {
 	a := []int{1, 2, 3, 4, 5}
 
 	assert.Equal(t, Collect(a).Prepend(0).ToNumberArray()[0].IntPart(), int64(0))
+}
+
+func TestCollection_Pull(t *testing.T) {
+	a := map[string]interface{}{
+		"product_id": 1,
+		"name":       "Desk",
+		"price":      100,
+		"discount":   false,
+	}
+
+	assert.Equal(t, Collect(a).Pull("name").length, 3)
+}
+
+func TestCollection_Put(t *testing.T) {
+	a := map[string]interface{}{
+		"product_id": 1,
+		"name":       "Desk",
+		"price":      100,
+		"discount":   false,
+	}
+
+	assert.Equal(t, Collect(a).Put("name1", 2121).length, 5)
+}
+
+func TestCollection_SortBy(t *testing.T) {
+
+	m := make(map[int]map[string]interface{})
+	c := map[string]interface{}{
+		"product_id": 122,
+		"name":       "Desk",
+		"price":      100,
+		"discount":   false,
+	}
+
+	m[0] = c
+	d := map[string]interface{}{
+		"product_id": 1,
+		"name":       "Desk",
+		"price":      100,
+		"discount":   false,
+	}
+	m[1] = d
+	fmt.Println(m)
+
+	assert.Equal(t, Collect(m).SortBy("product_id").length, 5)
 }

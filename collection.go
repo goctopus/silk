@@ -328,18 +328,50 @@ func (c Collection) Prepend(values ...interface{}) Collection {
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-pull
-func (c Collection) Pull(key interface{}) Collection {
-	panic("implement it")
+func (c Collection) Pull(key string) Collection {
+
+	if n, ok := c.value.(map[string]interface{}); ok {
+		delete(n, key)
+
+		return Collect(n)
+	}
+
+	return Collect(c)
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-put
 func (c Collection) Put(key string, value interface{}) Collection {
-	panic("implement it")
+	arr := make(map[string]interface{}, 0)
+
+	if n, ok := c.value.(map[string]interface{}); ok {
+		arr = n
+	}
+	arr[key] = value
+
+	return Collect(arr)
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-sortby
 func (c Collection) SortBy(key string) Collection {
-	panic("implement it")
+
+	arr := make(map[string]interface{}, 0)
+
+	if n, ok := c.value.(map[string]interface{}); ok {
+		for i, v := range n {
+
+
+			if v[key] == "" {
+
+			}
+		}
+	}
+
+	//for key := range map2{
+	//	s1 = append(s1, key)
+	//}
+
+	return Collect(arr)
+
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-spice
