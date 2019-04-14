@@ -25,6 +25,9 @@ func Collect(src interface{}) Collection {
 	case []map[string]interface{}:
 		c.value = src
 		c.length = len(src.([]map[string]interface{}))
+	case map[int]map[string]interface{}:
+		c.value = src
+		c.length = len(src.(map[int]map[string]interface{}))
 	case []string:
 		c.value = src
 		c.length = len(src.([]string))
@@ -354,21 +357,42 @@ func (c Collection) Put(key string, value interface{}) Collection {
 // reference: https://laravel.com/docs/5.8/collections#method-sortby
 func (c Collection) SortBy(key string) Collection {
 
-	arr := make(map[string]interface{}, 0)
-
-	if n, ok := c.value.(map[string]interface{}); ok {
+	//sort key
+	keys := make(map[decimal.Decimal]int, 0)
+	if n, ok := c.value.(map[int]map[string]interface{}); ok {
 		for i, v := range n {
-
-
-			if v[key] == "" {
-
-			}
+			keys[NewDecimalFromInterface(v[key])] = i
 		}
 	}
 
-	//for key := range map2{
-	//	s1 = append(s1, key)
-	//}
+	sortKeys := make(map[int]decimal.Decimal, 0)
+	index := 0
+	for i := range keys {
+		sortKeys[index] = i
+		index = index + 1
+	}
+	var temp decimal.Decimal
+	for i := 0; i < c.length-1; i++ {
+		for j := 0; j < c.length-1-i; j++ {
+			temp = sortKeys[j]
+			sortKeys[j] = sortKeys[j+1]
+			sortKeys[j+1] = temp
+		}
+	}
+	arr := make(map[int]map[string]interface{}, 0)
+
+
+	index = 0
+	if n, ok := c.value.(map[int]map[string]interface{}); ok {
+		for _, v := range sortKeys {
+			for _, v1 := range n {
+				if v.Equal(NewDecimalFromInterface(v1[key])) {
+					arr[index] = v1
+					index = index + 1
+				}
+			}
+		}
+	}
 
 	return Collect(arr)
 

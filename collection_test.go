@@ -110,13 +110,11 @@ func TestCollection_SortBy(t *testing.T) {
 
 	m[0] = c
 	d := map[string]interface{}{
-		"product_id": 1,
+		"product_id": 1.2,
 		"name":       "Desk",
 		"price":      100,
 		"discount":   false,
 	}
 	m[1] = d
-	fmt.Println(m)
-
-	assert.Equal(t, Collect(m).SortBy("product_id").length, 5)
+	fmt.Println(Collect(m).SortBy("product_id"))
 }
