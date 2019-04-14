@@ -1,7 +1,6 @@
 package silk
 
 import (
-	"fmt"
 	"github.com/magiconair/properties/assert"
 	"testing"
 )
@@ -116,5 +115,5 @@ func TestCollection_SortBy(t *testing.T) {
 		"discount":   false,
 	}
 	m[1] = d
-	fmt.Println(Collect(m).SortBy("product_id"))
+	assert.Equal(t, Collect(m).SortBy("product_id"), []int{1, 0})
 }

@@ -355,7 +355,7 @@ func (c Collection) Put(key string, value interface{}) Collection {
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-sortby
-func (c Collection) SortBy(key string) Collection {
+func (c Collection) SortBy(key string) []int {
 
 	//sort key
 	keys := make(map[decimal.Decimal]int, 0)
@@ -379,22 +379,22 @@ func (c Collection) SortBy(key string) Collection {
 			sortKeys[j+1] = temp
 		}
 	}
-	arr := make(map[int]map[string]interface{}, 0)
+	arr := make([]int, c.length)
 
 
 	index = 0
 	if n, ok := c.value.(map[int]map[string]interface{}); ok {
 		for _, v := range sortKeys {
-			for _, v1 := range n {
+			for i, v1 := range n {
 				if v.Equal(NewDecimalFromInterface(v1[key])) {
-					arr[index] = v1
+					arr[index] = i
 					index = index + 1
 				}
 			}
 		}
 	}
 
-	return Collect(arr)
+	return arr
 
 }
 
