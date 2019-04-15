@@ -62,10 +62,6 @@ func (c BaseCollection) SortBy(key string) Collection {
 	panic("not implement")
 }
 
-func (c BaseCollection) Spice(index int) Collection {
-	panic("not implement")
-}
-
 func (c BaseCollection) Take(num int) Collection {
 	panic("not implement")
 }

@@ -60,9 +60,6 @@ type Collection interface {
 	// reference: https://laravel.com/docs/5.8/collections#method-sortby
 	SortBy(key string) Collection
 
-	// reference: https://laravel.com/docs/5.8/collections#method-spice
-	Spice(index int) Collection
-
 	// reference: https://laravel.com/docs/5.8/collections#method-take
 	Take(num int) Collection
 
