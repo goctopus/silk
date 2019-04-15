@@ -25,9 +25,6 @@ func Collect(src interface{}) Collection {
 	case []map[string]interface{}:
 		c.value = src
 		c.length = len(src.([]map[string]interface{}))
-	case map[int]map[string]interface{}:
-		c.value = src
-		c.length = len(src.(map[int]map[string]interface{}))
 	case []string:
 		c.value = src
 		c.length = len(src.([]string))
@@ -359,13 +356,12 @@ func (c Collection) SortBy(key string) []int {
 
 	//sort key
 	keys := make(map[decimal.Decimal]int, c.length)
-	if n, ok := c.value.(map[int]map[string]interface{}); ok {
+	if n, ok := c.value.([]map[string]interface{}); ok {
 		for i, v := range n {
 			keys[NewDecimalFromInterface(v[key])] = i
 		}
 	}
 
-	//sortKeys := make(map[int]decimal.Decimal, 0)
 	index := 0
 	sortKeys := make([]decimal.Decimal, c.length)
 	for i := range keys {
@@ -387,7 +383,7 @@ func (c Collection) SortBy(key string) []int {
 	arr := make([]int, c.length)
 
 	index = 0
-	if n, ok := c.value.(map[int]map[string]interface{}); ok {
+	if n, ok := c.value.([]map[string]interface{}); ok {
 		for _, v := range sortKeys {
 			for i, v1 := range n {
 				if v.Equal(NewDecimalFromInterface(v1[key])) {

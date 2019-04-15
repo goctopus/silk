@@ -112,9 +112,9 @@ func TestCollection_Put(t *testing.T) {
 
 func TestCollection_SortBy(t *testing.T) {
 
-	m := make(map[int]map[string]interface{}, 2)
+	//m := make(map[int]map[string]interface{}, 2)
 
-	//m:=make([]map[string]interface{},2)
+	m := make([]map[string]interface{}, 2)
 	c := map[string]interface{}{
 		"product_id": 122,
 		"name":       "Desk",
