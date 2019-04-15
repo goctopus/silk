@@ -53,7 +53,17 @@ func (builder *UsersBuilder) Save() {
 }
 
 func (builder *UsersBuilder) All() []UsersModel {
-	return make([]UsersModel, 0)
+	users := make([]UsersModel, 0)
+
+	info, _ := builder.db.All()
+
+	for i := 0; i < len(info); i++ {
+		var u UsersModel
+		silk.Transfer(info[i], &u)
+		users = append(users, u)
+	}
+
+	return users
 }
 
 func (builder *UsersBuilder) Collection() silk.Collection {
