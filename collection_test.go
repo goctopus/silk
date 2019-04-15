@@ -84,11 +84,11 @@ func TestCollection_Pull(t *testing.T) {
 		"discount":   false,
 	}
 
-	reflect.DeepEqual((Collect(a).Pull("name")).value, map[string]interface{}{
+	assert.Equal(t, reflect.DeepEqual((Collect(a).Pull("name")).value, map[string]interface{}{
 		"product_id": 1,
 		"price":      100,
 		"discount":   false,
-	})
+	}), true)
 
 }
 
@@ -100,13 +100,13 @@ func TestCollection_Put(t *testing.T) {
 		"discount":   false,
 	}
 
-	reflect.DeepEqual((Collect(a).Pull("name")).value, map[string]interface{}{
+	assert.Equal(t, reflect.DeepEqual((Collect(a).Pull("name")).value, map[string]interface{}{
 		"product_id": 1,
 		"name":       "Desk",
 		"price":      100,
 		"discount":   false,
 		"name1":      2121,
-	})
+	}), true)
 
 }
 
