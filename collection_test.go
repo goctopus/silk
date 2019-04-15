@@ -1,7 +1,6 @@
 package silk
 
 import (
-	"fmt"
 	"github.com/magiconair/properties/assert"
 	"reflect"
 	"testing"
@@ -124,7 +123,6 @@ func TestCollection_SortBy(t *testing.T) {
 	}
 
 	m[0] = c
-	fmt.Println(m[0]["product_id"])
 	d := map[string]interface{}{
 		"product_id": 1.2,
 		"name":       "Desk",
