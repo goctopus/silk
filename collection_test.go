@@ -1,7 +1,9 @@
 package silk
 
 import (
+	"fmt"
 	"github.com/magiconair/properties/assert"
+	"reflect"
 	"testing"
 )
 
@@ -83,7 +85,12 @@ func TestCollection_Pull(t *testing.T) {
 		"discount":   false,
 	}
 
-	assert.Equal(t, Collect(a).Pull("name").length, 3)
+	reflect.DeepEqual((Collect(a).Pull("name")).value, map[string]interface{}{
+		"product_id": 1,
+		"price":      100,
+		"discount":   false,
+	})
+
 }
 
 func TestCollection_Put(t *testing.T) {
@@ -94,12 +101,23 @@ func TestCollection_Put(t *testing.T) {
 		"discount":   false,
 	}
 
-	assert.Equal(t, Collect(a).Put("name1", 2121).length, 5)
+	reflect.DeepEqual((Collect(a).Pull("name")).value, map[string]interface{}{
+		"product_id": 1,
+		"name":       "Desk",
+		"price":      100,
+		"discount":   false,
+		"name1":      2121,
+	})
+
 }
 
 func TestCollection_SortBy(t *testing.T) {
 
-	m := make(map[int]map[string]interface{})
+	//[]map[string]interface{}
+
+	m := make(map[int]map[string]interface{}, 2)
+
+	//m:=make([]map[string]interface{},2)
 	c := map[string]interface{}{
 		"product_id": 122,
 		"name":       "Desk",
@@ -108,6 +126,7 @@ func TestCollection_SortBy(t *testing.T) {
 	}
 
 	m[0] = c
+	fmt.Println(m[0]["product_id"])
 	d := map[string]interface{}{
 		"product_id": 1.2,
 		"name":       "Desk",
