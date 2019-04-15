@@ -113,8 +113,6 @@ func TestCollection_Put(t *testing.T) {
 
 func TestCollection_SortBy(t *testing.T) {
 
-	//[]map[string]interface{}
-
 	m := make(map[int]map[string]interface{}, 2)
 
 	//m:=make([]map[string]interface{},2)
