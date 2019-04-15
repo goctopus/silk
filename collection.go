@@ -342,11 +342,6 @@ func (c Collection) SortBy(key string) Collection {
 	panic("implement it")
 }
 
-// reference: https://laravel.com/docs/5.8/collections#method-spice
-func (c Collection) Spice(index int) Collection {
-	panic("implement it")
-}
-
 // reference: https://laravel.com/docs/5.8/collections#method-take
 func (c Collection) Take(num int) Collection {
 	panic("implement it")
