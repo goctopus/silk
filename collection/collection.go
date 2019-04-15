@@ -9,6 +9,79 @@ func Collect(src interface{}) Collection {
 		c.value = src.([]string)
 		c.length = len(src.([]string))
 		return c
+	case []map[string]interface{}:
+		var c MapArrayCollection
+		c.value = src.([]map[string]interface{})
+		c.length = len(src.([]map[string]interface{}))
+		return c
+	case map[string]interface{}:
+		var c MapCollection
+		c.value = src.(map[string]interface{})
+		c.length = len(src.(map[string]interface{}))
+		return c
+	case []int:
+		var c NumberArrayCollection
+		var d = make([]decimal.Decimal, len(src.([]int)))
+		for k, v := range src.([]int) {
+			d[k] = decimal.New(int64(v), 0)
+		}
+		c.value = d
+		c.length = len(src.([]int))
+		return c
+	case []int8:
+		var c NumberArrayCollection
+		var d = make([]decimal.Decimal, len(src.([]int8)))
+		for k, v := range src.([]int8) {
+			d[k] = decimal.New(int64(v), 0)
+		}
+		c.value = d
+		c.length = len(src.([]int8))
+		return c
+	case []int16:
+		var c NumberArrayCollection
+		var d = make([]decimal.Decimal, len(src.([]int16)))
+		for k, v := range src.([]int16) {
+			d[k] = decimal.New(int64(v), 0)
+		}
+		c.value = d
+		c.length = len(src.([]int16))
+		return c
+	case []int32:
+		var c NumberArrayCollection
+		var d = make([]decimal.Decimal, len(src.([]int32)))
+		for k, v := range src.([]int32) {
+			d[k] = decimal.New(int64(v), 0)
+		}
+		c.value = d
+		c.length = len(src.([]int32))
+		return c
+	case []int64:
+		var c NumberArrayCollection
+		var d = make([]decimal.Decimal, len(src.([]int64)))
+		for k, v := range src.([]int64) {
+			d[k] = decimal.New(v, 0)
+		}
+		c.value = d
+		c.length = len(src.([]int64))
+		return c
+	case []float32:
+		var c NumberArrayCollection
+		var f = make([]decimal.Decimal, len(src.([]float32)))
+		for k, v := range src.([]float32) {
+			f[k] = decimal.NewFromFloat32(v)
+		}
+		c.value = f
+		c.length = len(src.([]float32))
+		return c
+	case []float64:
+		var c NumberArrayCollection
+		var f = make([]decimal.Decimal, len(src.([]float64)))
+		for k, v := range src.([]float64) {
+			f[k] = decimal.NewFromFloat(v)
+		}
+		c.value = f
+		c.length = len(src.([]float64))
+		return c
 	default:
 		panic("wrong type")
 	}
