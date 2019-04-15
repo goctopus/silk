@@ -328,18 +328,74 @@ func (c Collection) Prepend(values ...interface{}) Collection {
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-pull
-func (c Collection) Pull(key interface{}) Collection {
-	panic("implement it")
+func (c Collection) Pull(key string) Collection {
+
+	if n, ok := c.value.(map[string]interface{}); ok {
+		delete(n, key)
+
+		return Collect(n)
+	}
+
+	return Collect(c)
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-put
 func (c Collection) Put(key string, value interface{}) Collection {
-	panic("implement it")
+	arr := make(map[string]interface{}, 0)
+
+	if n, ok := c.value.(map[string]interface{}); ok {
+		arr = n
+	}
+	arr[key] = value
+
+	return Collect(arr)
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-sortby
-func (c Collection) SortBy(key string) Collection {
-	panic("implement it")
+func (c Collection) SortBy(key string) []int {
+
+	//sort key
+	keys := make(map[decimal.Decimal]int, c.length)
+	if n, ok := c.value.([]map[string]interface{}); ok {
+		for i, v := range n {
+			keys[NewDecimalFromInterface(v[key])] = i
+		}
+	}
+
+	index := 0
+	sortKeys := make([]decimal.Decimal, c.length)
+	for i := range keys {
+		sortKeys[index] = i
+		index = index + 1
+	}
+	var temp decimal.Decimal
+	for i := 0; i < c.length-1; i++ {
+		for j := 0; j < c.length-1-i; j++ {
+
+			if sortKeys[j].GreaterThanOrEqual(sortKeys[j+1]) {
+				temp = sortKeys[j]
+				sortKeys[j] = sortKeys[j+1]
+				sortKeys[j+1] = temp
+			}
+		}
+	}
+
+	arr := make([]int, c.length)
+
+	index = 0
+	if n, ok := c.value.([]map[string]interface{}); ok {
+		for _, v := range sortKeys {
+			for i, v1 := range n {
+				if v.Equal(NewDecimalFromInterface(v1[key])) {
+					arr[index] = i
+					index = index + 1
+				}
+			}
+		}
+	}
+
+	return arr
+
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-take
