@@ -358,15 +358,16 @@ func (c Collection) Put(key string, value interface{}) Collection {
 func (c Collection) SortBy(key string) []int {
 
 	//sort key
-	keys := make(map[decimal.Decimal]int, 0)
+	keys := make(map[decimal.Decimal]int, c.length)
 	if n, ok := c.value.(map[int]map[string]interface{}); ok {
 		for i, v := range n {
 			keys[NewDecimalFromInterface(v[key])] = i
 		}
 	}
 
-	sortKeys := make(map[int]decimal.Decimal, 0)
+	//sortKeys := make(map[int]decimal.Decimal, 0)
 	index := 0
+	sortKeys := make([]decimal.Decimal, c.length)
 	for i := range keys {
 		sortKeys[index] = i
 		index = index + 1
@@ -374,13 +375,16 @@ func (c Collection) SortBy(key string) []int {
 	var temp decimal.Decimal
 	for i := 0; i < c.length-1; i++ {
 		for j := 0; j < c.length-1-i; j++ {
-			temp = sortKeys[j]
-			sortKeys[j] = sortKeys[j+1]
-			sortKeys[j+1] = temp
+
+			if sortKeys[j].GreaterThanOrEqual(sortKeys[j+1]) {
+				temp = sortKeys[j]
+				sortKeys[j] = sortKeys[j+1]
+				sortKeys[j+1] = temp
+			}
 		}
 	}
-	arr := make([]int, c.length)
 
+	arr := make([]int, c.length)
 
 	index = 0
 	if n, ok := c.value.(map[int]map[string]interface{}); ok {
