@@ -3,6 +3,7 @@ package collection
 import (
 	"fmt"
 	"github.com/magiconair/properties/assert"
+	"github.com/shopspring/decimal"
 	"testing"
 )
 
@@ -49,4 +50,20 @@ func TestCollection_Take(t *testing.T) {
 		}, {
 			"foo": 30,
 		}})
+}
+
+func TestBaseCollection_Splice(t *testing.T) {
+	a := []string{"h", "e", "l", "l", "o"}
+
+	assert.Equal(t, Collect(a).Splice(1, 3, []string{"a"}), Collect([]string{"h", "a", "o"}))
+
+	assert.Equal(t, Collect(numbers).Splice(0, 10,
+		[]decimal.Decimal{NewDecimalFromInterface(3)}), Collect([]int{3}))
+
+	assert.Equal(t, Collect(foo).Splice(1, 2, nil), Collect([]map[string]interface{}{
+		{
+			"foo": 10,
+		}, {
+			"foo": 40,
+		}}))
 }

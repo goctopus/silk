@@ -64,16 +64,21 @@ func (c NumberArrayCollection) Prepend(values ...interface{}) Collection {
 func (c NumberArrayCollection) Splice(index, length int, new interface{}) Collection {
 	var d NumberArrayCollection
 
-	if value, ok := new.([]decimal.Decimal); ok {
-		n := c.value
-		n = append(n[:index], value...)
-		n = append(n, n[index+length:]...)
-
-		d.value = n
-		d.length = len(n)
+	n := c.value
+	if new != nil {
+		if value, ok := new.([]decimal.Decimal); ok {
+			m := n[index+length:]
+			n = append(n[:index], value...)
+			n = append(n, m...)
+		} else {
+			panic("new's type is wrong")
+		}
 	} else {
-		panic("new's type is wrong")
+		n = append(n[:index], n[index+length:]...)
 	}
+
+	d.value = n
+	d.length = len(n)
 
 	return d
 }

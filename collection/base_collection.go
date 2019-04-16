@@ -326,6 +326,10 @@ func (c BaseCollection) Split() {
 	panic("not implement")
 }
 
+func (c BaseCollection) Splice(index, length int, new interface{}) Collection {
+	return c
+}
+
 func (c BaseCollection) Tap() {
 	panic("not implement")
 }

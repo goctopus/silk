@@ -1,7 +1,5 @@
 package collection
 
-import "github.com/shopspring/decimal"
-
 type StringArrayCollection struct {
 	value []string
 	BaseCollection
@@ -52,16 +50,21 @@ func (c StringArrayCollection) Prepend(values ...interface{}) Collection {
 func (c StringArrayCollection) Splice(index, length int, new interface{}) Collection {
 	var d StringArrayCollection
 
-	if value, ok := new.([]string); ok {
-		n := c.value
-		n = append(n[:index], value...)
-		n = append(n, n[index+length:]...)
-
-		d.value = n
-		d.length = len(n)
+	n := c.value
+	if new != nil {
+		if value, ok := new.([]string); ok {
+			m := n[index+length:]
+			n = append(n[:index], value...)
+			n = append(n, m...)
+		} else {
+			panic("new's type is wrong")
+		}
 	} else {
-		panic("new's type is wrong")
+		n = append(n[:index], n[index+length:]...)
 	}
+
+	d.value = n
+	d.length = len(n)
 
 	return d
 }
