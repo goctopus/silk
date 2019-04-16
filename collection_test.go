@@ -134,7 +134,15 @@ func TestCollection_SortBy(t *testing.T) {
 }
 
 func TestCollection_Take(t *testing.T) {
-	//a := []string{"h", "e", "l", "l", "o"}
+	a := []string{"h", "e", "l", "l", "o"}
 
-	assert.Equal(t, Collect(foo[0]).Take(-1).ToMap(), map[string]interface{}{"foo": 10})
+	assert.Equal(t,Collect(foo[0]).Take(1).ToMap(), map[string]interface{}{"foo": 10})
+	assert.Equal(t, Collect(a).Take(-2).ToStringArray(), []string{"l", "o"})
+	assert.Equal(t, Collect(numbers).Take(4), Collect([]int{1, 2, 3, 4}))
+	assert.Equal(t,Collect(foo).Take(2).ToMapArray(), []map[string]interface{}{
+		{
+			"foo": 10,
+		}, {
+			"foo": 30,
+		}})
 }
