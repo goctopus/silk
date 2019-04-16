@@ -16,6 +16,8 @@
 - [ ] [模型api接口的完善和确定](https://github.com/goctopus/silk/blob/master/example/models/users.go)
 - [ ] [命令行工具（用于生成模型文件）](https://github.com/goctopus/silk/blob/master/cli/main.go)
 - [ ] [Collection数据结构实现](https://github.com/goctopus/silk/blob/master/collection/collection.go)
+    - [ ] [vector_trie实现](https://github.com/goctopus/silk/blob/master/collection/hamt/list.go)
+    - [ ] [hamt实现](https://github.com/goctopus/silk/blob/master/collection/hamt/map.go)
 - [ ] hook支持
 - [ ] 事务支持
 - [ ] 模型关系支持
