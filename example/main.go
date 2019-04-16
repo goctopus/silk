@@ -5,10 +5,17 @@ import (
 	"github.com/goctopus/silk"
 	_ "github.com/goctopus/silk/drivers/sqlite"
 	"github.com/goctopus/silk/example/models"
+	"io/ioutil"
 )
 
 func main() {
-	db, err := silk.Open("sqlite3", "test.db")
+
+	old, err := ioutil.ReadFile("test.db")
+	if err != nil {
+		panic(err)
+	}
+
+	silk.Open("sqlite3", "test.db")
 
 	if err != nil {
 		panic("invalid connection")
@@ -40,6 +47,7 @@ func main() {
 
 	models.Users().WhereCountry("中国").Delete()
 
-	db.Exec("delete from sqlite_sequence where name='users'")
-	db.Exec("update sqlite_sequence SET seq = 0 where name = 'users'")
+	if ioutil.WriteFile("test.db", old, 0644) != nil {
+		panic(err)
+	}
 }
