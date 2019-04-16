@@ -59,7 +59,12 @@ func (builder *UsersBuilder) All() []UsersModel {
 
 	for i := 0; i < len(info); i++ {
 		var u UsersModel
-		silk.Transfer(info[i], &u)
+		if name, ok := info[i]["name"]; ok {
+			u.Name = name.(string)
+		}
+		if id, ok := info[i]["id"]; ok {
+			u.Id = id.(int64)
+		}
 		users = append(users, u)
 	}
 
@@ -78,7 +83,13 @@ func (builder *UsersBuilder) Delete() {
 
 func (builder *UsersBuilder) First() UsersModel {
 	var u UsersModel
-	builder.db.FormFirst(&u)
+	info, _ := builder.db.First()
+	if name, ok := info["name"]; ok {
+		u.Name = name.(string)
+	}
+	if id, ok := info["id"]; ok {
+		u.Id = id.(int64)
+	}
 	u.Exist = true
 	builder.Clean()
 	return u
