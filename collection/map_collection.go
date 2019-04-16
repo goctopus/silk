@@ -41,7 +41,7 @@ func (c MapCollection) Take(num int) Collection {
 	}
 	m := make(map[string]interface{})
 	i := 0
-	for k, v := range c.ToMap() {
+	for k, v := range c.value {
 		if i == num {
 			break
 		}
