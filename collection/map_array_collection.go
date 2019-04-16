@@ -83,3 +83,20 @@ func (c MapArrayCollection) Only(keys []string) Collection {
 
 	return d
 }
+
+func (c MapArrayCollection) Splice(index, length int, new interface{}) Collection {
+	var d MapArrayCollection
+
+	if value, ok := new.([]map[string]interface{}); ok {
+		n := c.value
+		n = append(n[:index], value...)
+		n = append(n, n[index+length:]...)
+
+		d.value = n
+		d.length = len(n)
+	} else {
+		panic("new's type is wrong")
+	}
+
+	return d
+}

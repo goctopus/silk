@@ -322,10 +322,6 @@ func (c BaseCollection) SortKeysDesc() {
 	panic("not implement")
 }
 
-func (c BaseCollection) Splice() {
-	panic("not implement")
-}
-
 func (c BaseCollection) Split() {
 	panic("not implement")
 }
