@@ -15,7 +15,7 @@ func main() {
 		panic(err)
 	}
 
-	silk.Open("sqlite3", "test.db")
+	_, err = silk.Open("sqlite3", "test.db")
 
 	if err != nil {
 		panic("invalid connection")
