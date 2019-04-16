@@ -60,3 +60,25 @@ func (c NumberArrayCollection) Prepend(values ...interface{}) Collection {
 
 	return d
 }
+
+func (c NumberArrayCollection) Splice(index, length int, new interface{}) Collection {
+	var d NumberArrayCollection
+
+	n := c.value
+	if new != nil {
+		if value, ok := new.([]decimal.Decimal); ok {
+			m := n[index+length:]
+			n = append(n[:index], value...)
+			n = append(n, m...)
+		} else {
+			panic("new's type is wrong")
+		}
+	} else {
+		n = append(n[:index], n[index+length:]...)
+	}
+
+	d.value = n
+	d.length = len(n)
+
+	return d
+}

@@ -46,3 +46,25 @@ func (c StringArrayCollection) Prepend(values ...interface{}) Collection {
 
 	return d
 }
+
+func (c StringArrayCollection) Splice(index, length int, new interface{}) Collection {
+	var d StringArrayCollection
+
+	n := c.value
+	if new != nil {
+		if value, ok := new.([]string); ok {
+			m := n[index+length:]
+			n = append(n[:index], value...)
+			n = append(n, m...)
+		} else {
+			panic("new's type is wrong")
+		}
+	} else {
+		n = append(n[:index], n[index+length:]...)
+	}
+
+	d.value = n
+	d.length = len(n)
+
+	return d
+}

@@ -329,7 +329,7 @@ type Collection interface {
 	SortKeysDesc()
 
 	// reference: https://laravel.com/docs/5.8/collections#method-splice
-	Splice()
+	Splice(index, length int, new interface{}) Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-split
 	Split()
