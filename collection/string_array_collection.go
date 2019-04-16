@@ -46,3 +46,20 @@ func (c StringArrayCollection) Prepend(values ...interface{}) Collection {
 
 	return d
 }
+
+func (c StringArrayCollection) Take(num int) Collection {
+	var d StringArrayCollection
+	if num > c.length {
+		panic("Not enough elements to take")
+	}
+
+	if num >= 0 {
+		d.value = c.value[:num]
+		d.length = num
+	} else {
+		d.value = c.value[len(c.value)+num:]
+		d.length = 0 - num
+	}
+
+	return d
+}

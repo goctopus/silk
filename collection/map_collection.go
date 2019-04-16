@@ -29,3 +29,27 @@ func (c MapCollection) Prepend(values ...interface{}) Collection {
 
 	return d
 }
+
+func (c MapCollection) Take(num int) Collection {
+	var d MapCollection
+	if num > c.length {
+		panic("Not enough elements to take")
+	}
+
+	if num < 0 {
+		num = 0 - num
+	}
+	m := make(map[string]interface{})
+	i := 0
+	for k, v := range c.ToMap() {
+		if i == num {
+			break
+		}
+		m[k] = v
+		i++
+	}
+	d.value = m
+	d.length = len(m)
+
+	return d
+}
