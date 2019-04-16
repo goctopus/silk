@@ -400,7 +400,53 @@ func (c Collection) SortBy(key string) []int {
 
 // reference: https://laravel.com/docs/5.8/collections#method-take
 func (c Collection) Take(num int) Collection {
-	panic("implement it")
+	var d Collection
+	if num > c.length {
+		panic("Not enough elements to take")
+	}
+
+	switch c.value.(type) {
+	// (If necessary)map[string]interface{} returns specified quantity keys
+	case map[string]interface{}:
+		if num < 0 {
+			num = 0 - num
+		}
+
+		m := make(map[string]interface{})
+		i := 0
+		for k, v := range c.ToMap() {
+			if i == num {
+				break
+			}
+			m[k] = v
+			i++
+		}
+		d = Collection{value: m, length: len(m)}
+	case []decimal.Decimal:
+		n := c.ToNumberArray()
+		if num >= 0 {
+			d = Collection{value: n[:num], length: num}
+		} else {
+			d = Collection{value: n[len(n)+num:], length: 0 - num}
+		}
+	case []string:
+		n := c.ToStringArray()
+		if num >= 0 {
+			d = Collection{value: n[:num], length: num}
+		} else {
+			d = Collection{value: n[len(n)+num:], length: 0 - num}
+		}
+	case []map[string]interface{}:
+		n := c.ToMapArray()
+		if num >= 0 {
+			d = Collection{value: n[:num], length: num}
+		} else {
+			d = Collection{value: n[len(n)+num:], length: 0 - num}
+		}
+	default:
+		panic("wrong type")
+	}
+	return d
 }
 
 // reference: https://laravel.com/docs/5.8/collections#method-average

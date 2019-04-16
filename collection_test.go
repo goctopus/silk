@@ -132,3 +132,9 @@ func TestCollection_SortBy(t *testing.T) {
 	m[1] = d
 	assert.Equal(t, Collect(m).SortBy("product_id"), []int{1, 0})
 }
+
+func TestCollection_Take(t *testing.T) {
+	//a := []string{"h", "e", "l", "l", "o"}
+
+	assert.Equal(t, Collect(foo[0]).Take(-1).ToMap(), map[string]interface{}{"foo": 10})
+}
