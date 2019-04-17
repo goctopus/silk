@@ -105,3 +105,20 @@ func (c MapArrayCollection) Splice(index, length int, new interface{}) Collectio
 
 	return d
 }
+
+func (c MapArrayCollection) Take(num int) Collection {
+	var d MapArrayCollection
+	if num > c.length {
+		panic("Not enough elements to take")
+	}
+
+	if num >= 0 {
+		d.value = c.value[:num]
+		d.length = num
+	} else {
+		d.value = c.value[len(c.value)+num:]
+		d.length = 0 - num
+	}
+
+	return d
+}
