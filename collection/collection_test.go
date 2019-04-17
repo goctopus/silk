@@ -24,8 +24,6 @@ var (
 			"foo": 20,
 		}, {
 			"foo": 40,
-		}, {
-			"foo": 40,
 		},
 	}
 )
@@ -78,9 +76,22 @@ func TestBaseCollection_All(t *testing.T) {
 
 func TestBaseCollection_Mode(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o", "w", "o", "l", "d"}
+	foo2 := []map[string]interface{}{
+		{
+			"foo": 10,
+		}, {
+			"foo": 30,
+		}, {
+			"foo": 20,
+		}, {
+			"foo": 40,
+		}, {
+			"foo": 40,
+		},
+	}
 
 	assert.Equal(t, Collect(numbers).Mode(""),
 		[]interface{}{NewDecimalFromInterface(6), NewDecimalFromInterface(8)})
 	assert.Equal(t, Collect(a).Mode(""), []interface{}{"l"})
-	assert.Equal(t, Collect(foo).Mode("foo"), []interface{}{40})
+	assert.Equal(t, Collect(foo2).Mode("foo"), []interface{}{40})
 }

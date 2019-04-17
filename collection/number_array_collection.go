@@ -111,6 +111,7 @@ func (c NumberArrayCollection) All() []interface{} {
 	return s
 }
 
+// Type of slice use "" as parameter
 func (c NumberArrayCollection) Mode(key string) []interface{} {
 	valueCount := make(map[float64]int)
 	for _, v := range c.value {
