@@ -1,6 +1,9 @@
 package collection
 
-import "github.com/shopspring/decimal"
+import (
+	"fmt"
+	"github.com/shopspring/decimal"
+)
 
 type NumberArrayCollection struct {
 	value []decimal.Decimal
@@ -107,4 +110,32 @@ func (c NumberArrayCollection) All() []interface{} {
 	}
 
 	return s
+}
+
+func (c NumberArrayCollection) Mode() []interface{} {
+	valueCount := make(map[decimal.Decimal]int)
+	for _, v := range c.value {
+
+		if valueCount[v] != 0 {
+			valueCount[v]++
+		} else {
+			valueCount[v] = 1
+		}
+	}
+	fmt.Println(c.value)
+	fmt.Println(valueCount)
+
+	maxCount := 0
+	maxValue := make([]interface{}, 0)
+	for v, c := range valueCount {
+		switch {
+		case c < maxCount:
+			continue
+		case c == maxCount:
+			maxValue = append(maxValue, v)
+		case c > maxCount:
+			maxValue = append([]interface{}{}, v)
+		}
+	}
+	return maxValue
 }

@@ -75,3 +75,7 @@ func TestBaseCollection_All(t *testing.T) {
 	assert.Equal(t, len(Collect(numbers).All()), 10)
 	assert.Equal(t, Collect(foo).All()[1], map[string]interface{}{"foo": 30})
 }
+
+func TestBaseCollection_Mode(t *testing.T) {
+	assert.Equal(t, Collect(numbers).Mode(), []interface{}{6, 8})
+}

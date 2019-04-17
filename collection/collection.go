@@ -116,7 +116,7 @@ type Collection interface {
 	Pluck(key string) Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-mode
-	Mode(key ...string) []interface{}
+	Mode() []interface{}
 
 	// reference: https://laravel.com/docs/5.8/collections#method-only
 	Only(keys []string) Collection

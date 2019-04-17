@@ -131,3 +131,8 @@ func (c MapArrayCollection) All() []interface{} {
 
 	return s
 }
+
+//func (c MapArrayCollection) Mode() []interface{} {
+//	s := make([]interface{}, 0)
+//
+//}
