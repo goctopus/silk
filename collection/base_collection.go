@@ -38,7 +38,7 @@ func (c BaseCollection) Pluck(key string) Collection {
 	panic("not implement")
 }
 
-func (c BaseCollection) Mode() []interface{} {
+func (c BaseCollection) Mode(key string) []interface{} {
 	panic("not implement")
 }
 

@@ -24,6 +24,8 @@ var (
 			"foo": 20,
 		}, {
 			"foo": 40,
+		}, {
+			"foo": 40,
 		},
 	}
 )
@@ -42,10 +44,8 @@ func TestBaseCollection_Splice(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o"}
 
 	assert.Equal(t, Collect(a).Splice(1, 3, []string{"a"}), Collect([]string{"h", "a", "o"}))
-
 	assert.Equal(t, Collect(numbers).Splice(0, 10,
 		[]decimal.Decimal{NewDecimalFromInterface(3)}), Collect([]int{3}))
-
 	assert.Equal(t, Collect(foo).Splice(1, 2, nil), Collect([]map[string]interface{}{
 		{
 			"foo": 10,
@@ -77,5 +77,10 @@ func TestBaseCollection_All(t *testing.T) {
 }
 
 func TestBaseCollection_Mode(t *testing.T) {
-	assert.Equal(t, Collect(numbers).Mode(), []interface{}{6, 8})
+	a := []string{"h", "e", "l", "l", "o", "w", "o", "l", "d"}
+
+	assert.Equal(t, Collect(numbers).Mode(""),
+		[]interface{}{NewDecimalFromInterface(6), NewDecimalFromInterface(8)})
+	assert.Equal(t, Collect(a).Mode(""), []interface{}{"l"})
+	assert.Equal(t, Collect(foo).Mode("foo"), []interface{}{40})
 }

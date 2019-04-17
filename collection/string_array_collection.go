@@ -94,3 +94,25 @@ func (c StringArrayCollection) All() []interface{} {
 
 	return s
 }
+
+func (c StringArrayCollection) Mode(key string) []interface{} {
+	valueCount := make(map[string]int)
+	for _, v := range c.value {
+		valueCount[v]++
+	}
+
+	maxCount := 0
+	maxValue := make([]interface{}, len(valueCount))
+	for v, c := range valueCount {
+		switch {
+		case c < maxCount:
+			continue
+		case c == maxCount:
+			maxValue = append(maxValue, v)
+		case c > maxCount:
+			maxValue = append([]interface{}{}, v)
+			maxCount = c
+		}
+	}
+	return maxValue
+}

@@ -1,7 +1,6 @@
 package collection
 
 import (
-	"fmt"
 	"github.com/shopspring/decimal"
 )
 
@@ -112,29 +111,24 @@ func (c NumberArrayCollection) All() []interface{} {
 	return s
 }
 
-func (c NumberArrayCollection) Mode() []interface{} {
-	valueCount := make(map[decimal.Decimal]int)
+func (c NumberArrayCollection) Mode(key string) []interface{} {
+	valueCount := make(map[float64]int)
 	for _, v := range c.value {
-
-		if valueCount[v] != 0 {
-			valueCount[v]++
-		} else {
-			valueCount[v] = 1
-		}
+		f, _ := v.Float64()
+		valueCount[f]++
 	}
-	fmt.Println(c.value)
-	fmt.Println(valueCount)
 
 	maxCount := 0
-	maxValue := make([]interface{}, 0)
+	maxValue := make([]interface{}, len(valueCount))
 	for v, c := range valueCount {
 		switch {
 		case c < maxCount:
 			continue
 		case c == maxCount:
-			maxValue = append(maxValue, v)
+			maxValue = append(maxValue, NewDecimalFromInterface(v))
 		case c > maxCount:
-			maxValue = append([]interface{}{}, v)
+			maxValue = append([]interface{}{}, NewDecimalFromInterface(v))
+			maxCount = c
 		}
 	}
 	return maxValue
