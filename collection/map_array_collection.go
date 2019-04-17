@@ -122,3 +122,12 @@ func (c MapArrayCollection) Take(num int) Collection {
 
 	return d
 }
+
+func (c MapArrayCollection) All() []interface{} {
+	s := make([]interface{}, len(c.value))
+	for i := 0; i < len(c.value); i++ {
+		s[i] = c.value[i]
+	}
+
+	return s
+}
