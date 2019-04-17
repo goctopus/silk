@@ -67,3 +67,11 @@ func TestCollection_Take(t *testing.T) {
 			"foo": 30,
 		}}))
 }
+
+func TestBaseCollection_All(t *testing.T) {
+	a := []string{"h", "e", "l", "l", "o"}
+
+	assert.Equal(t, Collect(a).All(), []interface{}{"h", "e", "l", "l", "o"})
+	assert.Equal(t, len(Collect(numbers).All()), 10)
+	assert.Equal(t, Collect(foo).All()[1], map[string]interface{}{"foo": 30})
+}
