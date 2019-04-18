@@ -3,7 +3,12 @@ package collection
 import "github.com/shopspring/decimal"
 
 type BaseCollection struct {
+	value  interface{}
 	length int
+}
+
+func (c BaseCollection) Value() interface{} {
+	return c.value
 }
 
 func (c BaseCollection) All() []interface{} {
@@ -326,7 +331,7 @@ func (c BaseCollection) Split() {
 	panic("not implement")
 }
 
-func (c BaseCollection) Splice(index, length int, new interface{}) Collection {
+func (c BaseCollection) Splice(index ...int) Collection {
 	panic("not implement")
 }
 

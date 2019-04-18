@@ -57,38 +57,38 @@ func (c NumberArrayCollection) Max(key ...string) decimal.Decimal {
 func (c NumberArrayCollection) Prepend(values ...interface{}) Collection {
 	var d NumberArrayCollection
 
-	d.value = append([]decimal.Decimal{newDecimalFromInterface(values[0])}, d.value...)
+	var n = make([]decimal.Decimal, len(c.value))
+	copy(n, c.value)
+
+	d.value = append([]decimal.Decimal{newDecimalFromInterface(values[0])}, n...)
 	d.length = len(d.value)
 
 	return d
 }
 
-func (c NumberArrayCollection) Splice(index, length int, new interface{}) Collection {
-	var d NumberArrayCollection
+func (c NumberArrayCollection) Splice(index ...int) Collection {
 
-	n := c.value
-	if new != nil {
-		if value, ok := new.([]decimal.Decimal); ok {
-			m := n[index+length:]
-			n = append(n[:index], value...)
-			n = append(n, m...)
-		} else {
-			panic("new's type is wrong")
-		}
+	if len(index) == 1 {
+		var n = make([]decimal.Decimal, len(c.value))
+		copy(n, c.value)
+		n = n[index[0]:]
+
+		return NumberArrayCollection{n, BaseCollection{length: len(n)}}
+	} else if len(index) > 1 {
+		var n = make([]decimal.Decimal, len(c.value))
+		copy(n, c.value)
+		n = n[index[0] : index[0]+index[1]]
+
+		return NumberArrayCollection{n, BaseCollection{length: len(n)}}
 	} else {
-		n = append(n[:index], n[index+length:]...)
+		panic("invalid argument")
 	}
-
-	d.value = n
-	d.length = len(n)
-
-	return d
 }
 
 func (c NumberArrayCollection) Take(num int) Collection {
 	var d NumberArrayCollection
 	if num > c.length {
-		panic("Not enough elements to take")
+		panic("not enough elements to take")
 	}
 
 	if num >= 0 {

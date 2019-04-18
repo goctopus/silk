@@ -1,10 +1,16 @@
 package collection
 
-import "github.com/shopspring/decimal"
+import (
+	"github.com/shopspring/decimal"
+)
 
 type MapArrayCollection struct {
 	value []map[string]interface{}
 	BaseCollection
+}
+
+func (c MapArrayCollection) Value() interface{} {
+	return c.value
 }
 
 func (c MapArrayCollection) Sum(key ...string) decimal.Decimal {
@@ -67,6 +73,19 @@ func (c MapArrayCollection) Pluck(key string) Collection {
 	return Collect(s)
 }
 
+func (c MapArrayCollection) Prepend(values ...interface{}) Collection {
+
+	var d MapArrayCollection
+
+	var n = make([]map[string]interface{}, len(c.value))
+	copy(n, c.value)
+
+	d.value = append([]map[string]interface{}{values[0].(map[string]interface{})}, n...)
+	d.length = len(d.value)
+
+	return d
+}
+
 func (c MapArrayCollection) Only(keys []string) Collection {
 	var d MapArrayCollection
 
@@ -84,32 +103,29 @@ func (c MapArrayCollection) Only(keys []string) Collection {
 	return d
 }
 
-func (c MapArrayCollection) Splice(index, length int, new interface{}) Collection {
-	var d MapArrayCollection
+func (c MapArrayCollection) Splice(index ...int) Collection {
 
-	n := c.value
-	if new != nil {
-		if value, ok := new.([]map[string]interface{}); ok {
-			m := n[index+length:]
-			n = append(n[:index], value...)
-			n = append(n, m...)
-		} else {
-			panic("new's type is wrong")
-		}
+	if len(index) == 1 {
+		var n = make([]map[string]interface{}, len(c.value))
+		copy(n, c.value)
+		n = n[index[0]:]
+
+		return MapArrayCollection{n, BaseCollection{length: len(n)}}
+	} else if len(index) > 1 {
+		var n = make([]map[string]interface{}, len(c.value))
+		copy(n, c.value)
+		n = n[index[0] : index[0]+index[1]]
+
+		return MapArrayCollection{n, BaseCollection{length: len(n)}}
 	} else {
-		n = append(n[:index], n[index+length:]...)
+		panic("invalid argument")
 	}
-
-	d.value = n
-	d.length = len(n)
-
-	return d
 }
 
 func (c MapArrayCollection) Take(num int) Collection {
 	var d MapArrayCollection
 	if num > c.length {
-		panic("Not enough elements to take")
+		panic("not enough elements to take")
 	}
 
 	if num >= 0 {

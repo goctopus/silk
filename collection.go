@@ -402,7 +402,7 @@ func (c Collection) SortBy(key string) []int {
 func (c Collection) Take(num int) Collection {
 	var d Collection
 	if num > c.length {
-		panic("Not enough elements to take")
+		panic("not enough elements to take")
 	}
 
 	switch c.value.(type) {

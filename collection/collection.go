@@ -1,6 +1,10 @@
 package collection
 
-import "github.com/shopspring/decimal"
+import (
+	"github.com/shopspring/decimal"
+	"bytes"
+	"encoding/gob"
+)
 
 func Collect(src interface{}) Collection {
 	switch src.(type) {
@@ -88,6 +92,8 @@ func Collect(src interface{}) Collection {
 }
 
 type Collection interface {
+	Value() interface{}
+
 	// reference: https://laravel.com/docs/5.8/collections#method-all
 	All() []interface{}
 
@@ -329,7 +335,7 @@ type Collection interface {
 	SortKeysDesc()
 
 	// reference: https://laravel.com/docs/5.8/collections#method-splice
-	Splice(index, length int, new interface{}) Collection
+	Splice(index ...int) Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-split
 	Split()
@@ -456,4 +462,20 @@ func newDecimalFromInterface(a interface{}) decimal.Decimal {
 
 func nd(a interface{}) decimal.Decimal {
 	return newDecimalFromInterface(a)
+}
+
+func copyMap(m map[string]interface{}) map[string]interface{} {
+	var buf bytes.Buffer
+	enc := gob.NewEncoder(&buf)
+	dec := gob.NewDecoder(&buf)
+	err := enc.Encode(m)
+	if err != nil {
+		panic(err)
+	}
+	var cm map[string]interface{}
+	err = dec.Decode(&cm)
+	if err != nil {
+		panic(err)
+	}
+	return cm
 }

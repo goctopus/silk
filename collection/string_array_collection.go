@@ -1,7 +1,5 @@
 package collection
 
-import "fmt"
-
 type StringArrayCollection struct {
 	value []string
 	BaseCollection
@@ -41,34 +39,35 @@ func (c StringArrayCollection) Combine(value []interface{}) Collection {
 }
 
 func (c StringArrayCollection) Prepend(values ...interface{}) Collection {
+
 	var d StringArrayCollection
 
-	d.value = append([]string{values[0].(string)}, c.value...)
+	var n = make([]string, len(c.value))
+	copy(n, c.value)
+
+	d.value = append([]string{values[0].(string)}, n...)
 	d.length = len(d.value)
 
 	return d
 }
 
-func (c StringArrayCollection) Splice(index, length int, new interface{}) Collection {
-	var d StringArrayCollection
+func (c StringArrayCollection) Splice(index ...int) Collection {
 
-	n := c.value
-	if new != nil {
-		if value, ok := new.([]string); ok {
-			m := n[index+length:]
-			n = append(n[:index], value...)
-			n = append(n, m...)
-		} else {
-			panic(fmt.Sprintf("invalid argument: %v", new))
-		}
+	if len(index) == 1 {
+		var n = make([]string, len(c.value))
+		copy(n, c.value)
+		n = n[index[0]:]
+
+		return StringArrayCollection{n, BaseCollection{length: len(n)}}
+	} else if len(index) > 1 {
+		var n = make([]string, len(c.value))
+		copy(n, c.value)
+		n = n[index[0] : index[0]+index[1]]
+
+		return StringArrayCollection{n, BaseCollection{length: len(n)}}
 	} else {
-		n = append(n[:index], n[index+length:]...)
+		panic("invalid argument")
 	}
-
-	d.value = n
-	d.length = len(n)
-
-	return d
 }
 
 func (c StringArrayCollection) Take(num int) Collection {
