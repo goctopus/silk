@@ -1,6 +1,8 @@
 package collection
 
-import "github.com/shopspring/decimal"
+import (
+	"github.com/shopspring/decimal"
+)
 
 func Collect(src interface{}) Collection {
 	switch src.(type) {
@@ -88,6 +90,8 @@ func Collect(src interface{}) Collection {
 }
 
 type Collection interface {
+	Value() interface{}
+
 	// reference: https://laravel.com/docs/5.8/collections#method-all
 	All() []interface{}
 
@@ -329,7 +333,7 @@ type Collection interface {
 	SortKeysDesc()
 
 	// reference: https://laravel.com/docs/5.8/collections#method-splice
-	Splice(index, length int, new interface{}) Collection
+	Splice(index ...int) Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-split
 	Split()
