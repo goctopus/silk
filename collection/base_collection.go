@@ -75,7 +75,7 @@ func (c BaseCollection) Average() {
 	panic("not implement")
 }
 
-func (c BaseCollection) Chunk(num int) interface{} {
+func (c BaseCollection) Chunk(num int) MultiDimensionalArrayCollection {
 	panic("not implement")
 }
 

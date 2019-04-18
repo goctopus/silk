@@ -119,12 +119,7 @@ func TestBaseCollection_Prepend(t *testing.T) {
 
 func TestCollection_Chunk(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o"}
-	assert.Equal(t, Collect(foo).Chunk(2).([][]map[string]interface{})[0], []map[string]interface{}{
-		{
-			"foo": 10,
-		}, {
-			"foo": 30,
-		}})
-	assert.Equal(t, len(Collect(numbers).Chunk(3).([][]decimal.Decimal)), 4)
-	assert.Equal(t, Collect(a).Chunk(3).([][]string), [][]string{{"h", "e", "l"}, {"l", "o"}})
+	assert.Equal(t, Collect(foo).Chunk(2).value[0][0], map[string]interface{}{"foo": 10})
+	assert.Equal(t, len(Collect(numbers).Chunk(3).value), 4)
+	assert.Equal(t, Collect(a).Chunk(3).value[0][2], "l")
 }
