@@ -79,7 +79,7 @@ func (c BaseCollection) Chunk(num int) MultiDimensionalArrayCollection {
 	panic("not implement")
 }
 
-func (c BaseCollection) Collapse() {
+func (c BaseCollection) Collapse() Collection {
 	panic("not implement")
 }
 

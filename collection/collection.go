@@ -1,9 +1,9 @@
 package collection
 
 import (
-	"github.com/shopspring/decimal"
 	"bytes"
 	"encoding/gob"
+	"github.com/shopspring/decimal"
 )
 
 func Collect(src interface{}) Collection {
@@ -86,6 +86,41 @@ func Collect(src interface{}) Collection {
 		c.value = f
 		c.length = len(src.([]float64))
 		return c
+	case []interface{}:
+		if len(src.([]interface{})) == 0 {
+			panic("wrong value")
+		}
+		switch src.([]interface{})[0].(type) {
+		case map[string]interface{}:
+			var c MapArrayCollection
+			var f = make([]map[string]interface{}, len(src.([]interface{})))
+			for k, v := range src.([]interface{}) {
+				f[k] = v.(map[string]interface{})
+			}
+			c.value = f
+			c.length = len(src.([]interface{}))
+			return c
+		case decimal.Decimal:
+			var c NumberArrayCollection
+			var f = make([]decimal.Decimal, len(src.([]interface{})))
+			for k, v := range src.([]interface{}) {
+				f[k] = v.(decimal.Decimal)
+			}
+			c.value = f
+			c.length = len(src.([]interface{}))
+			return c
+		case string:
+			var c StringArrayCollection
+			var f = make([]string, len(src.([]interface{})))
+			for k, v := range src.([]interface{}) {
+				f[k] = v.(string)
+			}
+			c.value = f
+			c.length = len(src.([]interface{}))
+			return c
+		default:
+			panic("wrong type")
+		}
 	default:
 		panic("wrong type")
 	}
@@ -149,7 +184,7 @@ type Collection interface {
 	Chunk(num int) MultiDimensionalArrayCollection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-collapse
-	Collapse()
+	Collapse() Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-concat
 	Concat()
