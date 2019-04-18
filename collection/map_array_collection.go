@@ -11,7 +11,7 @@ func (c MapArrayCollection) Sum(key ...string) decimal.Decimal {
 	var sum = decimal.New(0, 0)
 
 	for i := 0; i < len(c.value); i++ {
-		sum = sum.Add(NewDecimalFromInterface(c.value[i][key[0]]))
+		sum = sum.Add(newDecimalFromInterface(c.value[i][key[0]]))
 	}
 
 	return sum
@@ -25,7 +25,7 @@ func (c MapArrayCollection) Min(key ...string) decimal.Decimal {
 	)
 
 	for i := 0; i < len(c.value); i++ {
-		number = NewDecimalFromInterface(c.value[i][key[0]])
+		number = newDecimalFromInterface(c.value[i][key[0]])
 		if i == 0 {
 			smallest = number
 			continue
@@ -46,7 +46,7 @@ func (c MapArrayCollection) Max(key ...string) decimal.Decimal {
 	)
 
 	for i := 0; i < len(c.value); i++ {
-		number = NewDecimalFromInterface(c.value[i][key[0]])
+		number = newDecimalFromInterface(c.value[i][key[0]])
 		if i == 0 {
 			biggest = number
 			continue
@@ -132,10 +132,10 @@ func (c MapArrayCollection) All() []interface{} {
 	return s
 }
 
-func (c MapArrayCollection) Mode(key string) []interface{} {
+func (c MapArrayCollection) Mode(key ...string) []interface{} {
 	valueCount := make(map[interface{}]int)
 	for i := 0; i < c.length; i++ {
-		if v, ok := c.value[i][key]; ok {
+		if v, ok := c.value[i][key[0]]; ok {
 			valueCount[v]++
 		}
 	}
@@ -154,4 +154,8 @@ func (c MapArrayCollection) Mode(key string) []interface{} {
 		}
 	}
 	return maxValue
+}
+
+func (c MapArrayCollection) ToMapArray() []map[string]interface{} {
+	return c.value
 }

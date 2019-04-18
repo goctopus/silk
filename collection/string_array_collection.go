@@ -1,5 +1,7 @@
 package collection
 
+import "fmt"
+
 type StringArrayCollection struct {
 	value []string
 	BaseCollection
@@ -57,7 +59,7 @@ func (c StringArrayCollection) Splice(index, length int, new interface{}) Collec
 			n = append(n[:index], value...)
 			n = append(n, m...)
 		} else {
-			panic("new's type is wrong")
+			panic(fmt.Sprintf("invalid argument: %v", new))
 		}
 	} else {
 		n = append(n[:index], n[index+length:]...)
@@ -72,7 +74,7 @@ func (c StringArrayCollection) Splice(index, length int, new interface{}) Collec
 func (c StringArrayCollection) Take(num int) Collection {
 	var d StringArrayCollection
 	if num > c.length {
-		panic("Not enough elements to take")
+		panic("not enough elements to take")
 	}
 
 	if num >= 0 {
@@ -96,7 +98,7 @@ func (c StringArrayCollection) All() []interface{} {
 }
 
 // Type of slice use "" as parameter
-func (c StringArrayCollection) Mode(key string) []interface{} {
+func (c StringArrayCollection) Mode(key ...string) []interface{} {
 	valueCount := make(map[string]int)
 	for _, v := range c.value {
 		valueCount[v]++
@@ -116,4 +118,8 @@ func (c StringArrayCollection) Mode(key string) []interface{} {
 		}
 	}
 	return maxValue
+}
+
+func (c StringArrayCollection) ToStringArray() []string {
+	return c.value
 }
