@@ -140,7 +140,7 @@ type Collection interface {
 	Average()
 
 	// reference: https://laravel.com/docs/5.8/collections#method-chunk
-	Chunk(num int) interface{}
+	Chunk(num int) MultiDimensionalArrayCollection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-collapse
 	Collapse()
