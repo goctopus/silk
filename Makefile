@@ -20,3 +20,5 @@ fmt:
 	go fmt ./drivers/sqlite/
 	go fmt ./example/
 	go fmt ./example/models/
+	go fmt ./connection/
+

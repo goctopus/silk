@@ -116,7 +116,7 @@ type Collection interface {
 	Pluck(key string) Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-mode
-	Mode(key string) []interface{}
+	Mode(key ...string) []interface{}
 
 	// reference: https://laravel.com/docs/5.8/collections#method-only
 	Only(keys []string) Collection
@@ -419,7 +419,7 @@ type Collection interface {
 	Where(key string, value interface{}) Collection
 }
 
-func NewDecimalFromInterface(a interface{}) decimal.Decimal {
+func newDecimalFromInterface(a interface{}) decimal.Decimal {
 	var d decimal.Decimal
 
 	switch a.(type) {
@@ -452,4 +452,8 @@ func NewDecimalFromInterface(a interface{}) decimal.Decimal {
 	}
 
 	return d
+}
+
+func nd(a interface{}) decimal.Decimal {
+	return newDecimalFromInterface(a)
 }

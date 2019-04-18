@@ -57,7 +57,7 @@ func (c NumberArrayCollection) Max(key ...string) decimal.Decimal {
 func (c NumberArrayCollection) Prepend(values ...interface{}) Collection {
 	var d NumberArrayCollection
 
-	d.value = append([]decimal.Decimal{NewDecimalFromInterface(values[0])}, d.value...)
+	d.value = append([]decimal.Decimal{newDecimalFromInterface(values[0])}, d.value...)
 	d.length = len(d.value)
 
 	return d
@@ -112,7 +112,7 @@ func (c NumberArrayCollection) All() []interface{} {
 }
 
 // Type of slice use "" as parameter
-func (c NumberArrayCollection) Mode(key string) []interface{} {
+func (c NumberArrayCollection) Mode(key ...string) []interface{} {
 	valueCount := make(map[float64]int)
 	for _, v := range c.value {
 		f, _ := v.Float64()
@@ -126,11 +126,15 @@ func (c NumberArrayCollection) Mode(key string) []interface{} {
 		case c < maxCount:
 			continue
 		case c == maxCount:
-			maxValue = append(maxValue, NewDecimalFromInterface(v))
+			maxValue = append(maxValue, newDecimalFromInterface(v))
 		case c > maxCount:
-			maxValue = append([]interface{}{}, NewDecimalFromInterface(v))
+			maxValue = append([]interface{}{}, newDecimalFromInterface(v))
 			maxCount = c
 		}
 	}
 	return maxValue
+}
+
+func (c NumberArrayCollection) ToNumberArray() []decimal.Decimal {
+	return c.value
 }
