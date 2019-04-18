@@ -107,16 +107,6 @@ func TestCollection_Mode(t *testing.T) {
 	assert.Equal(t, Collect(foo2).Mode("foo"), []interface{}{40})
 }
 
-func TestBaseCollection_Prepend(t *testing.T) {
-	m := map[string]interface{}{
-		"foo": 10,
-	}
-	assert.Equal(t, Collect(m).Prepend("bar", 20).ToMap(), map[string]interface{}{
-		"foo": 10,
-		"bar": 20,
-	})
-}
-
 func TestCollection_Chunk(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o"}
 	assert.Equal(t, Collect(foo).Chunk(2).value[0][0], map[string]interface{}{"foo": 10})
