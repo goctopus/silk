@@ -68,7 +68,7 @@ func (c NumberArrayCollection) Splice(index ...int) Collection {
 	if len(index) == 1 {
 		var n = make([]decimal.Decimal, len(c.value))
 		copy(n, c.value)
-		n = n[:index[0]]
+		n = n[index[0]:]
 
 		return NumberArrayCollection{n, BaseCollection{length: len(n)}}
 	} else if len(index) > 1 {
