@@ -120,6 +120,6 @@ func (c StringArrayCollection) Mode(key ...string) []interface{} {
 	return maxValue
 }
 
-func (c StringArrayCollection) ToStringArray() []string  {
+func (c StringArrayCollection) ToStringArray() []string {
 	return c.value
 }
