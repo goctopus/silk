@@ -122,3 +122,36 @@ func (c MapArrayCollection) Take(num int) Collection {
 
 	return d
 }
+
+func (c MapArrayCollection) All() []interface{} {
+	s := make([]interface{}, len(c.value))
+	for i := 0; i < len(c.value); i++ {
+		s[i] = c.value[i]
+	}
+
+	return s
+}
+
+func (c MapArrayCollection) Mode(key string) []interface{} {
+	valueCount := make(map[interface{}]int)
+	for i := 0; i < c.length; i++ {
+		if v, ok := c.value[i][key]; ok {
+			valueCount[v]++
+		}
+	}
+
+	maxCount := 0
+	maxValue := make([]interface{}, len(valueCount))
+	for v, c := range valueCount {
+		switch {
+		case c < maxCount:
+			continue
+		case c == maxCount:
+			maxValue = append(maxValue, v)
+		case c > maxCount:
+			maxValue = append([]interface{}{}, v)
+			maxCount = c
+		}
+	}
+	return maxValue
+}

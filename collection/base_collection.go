@@ -38,7 +38,7 @@ func (c BaseCollection) Pluck(key string) Collection {
 	panic("not implement")
 }
 
-func (c BaseCollection) Mode(key ...string) []interface{} {
+func (c BaseCollection) Mode(key string) []interface{} {
 	panic("not implement")
 }
 
@@ -327,7 +327,7 @@ func (c BaseCollection) Split() {
 }
 
 func (c BaseCollection) Splice(index, length int, new interface{}) Collection {
-	return c
+	panic("not implement")
 }
 
 func (c BaseCollection) Tap() {

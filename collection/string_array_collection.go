@@ -85,3 +85,35 @@ func (c StringArrayCollection) Take(num int) Collection {
 
 	return d
 }
+
+func (c StringArrayCollection) All() []interface{} {
+	s := make([]interface{}, len(c.value))
+	for i := 0; i < len(c.value); i++ {
+		s[i] = c.value[i]
+	}
+
+	return s
+}
+
+// Type of slice use "" as parameter
+func (c StringArrayCollection) Mode(key string) []interface{} {
+	valueCount := make(map[string]int)
+	for _, v := range c.value {
+		valueCount[v]++
+	}
+
+	maxCount := 0
+	maxValue := make([]interface{}, len(valueCount))
+	for v, c := range valueCount {
+		switch {
+		case c < maxCount:
+			continue
+		case c == maxCount:
+			maxValue = append(maxValue, v)
+		case c > maxCount:
+			maxValue = append([]interface{}{}, v)
+			maxCount = c
+		}
+	}
+	return maxValue
+}

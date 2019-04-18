@@ -1,6 +1,8 @@
 package collection
 
-import "github.com/shopspring/decimal"
+import (
+	"github.com/shopspring/decimal"
+)
 
 type NumberArrayCollection struct {
 	value []decimal.Decimal
@@ -98,4 +100,37 @@ func (c NumberArrayCollection) Take(num int) Collection {
 	}
 
 	return d
+}
+
+func (c NumberArrayCollection) All() []interface{} {
+	s := make([]interface{}, len(c.value))
+	for i := 0; i < len(c.value); i++ {
+		s[i] = c.value[i]
+	}
+
+	return s
+}
+
+// Type of slice use "" as parameter
+func (c NumberArrayCollection) Mode(key string) []interface{} {
+	valueCount := make(map[float64]int)
+	for _, v := range c.value {
+		f, _ := v.Float64()
+		valueCount[f]++
+	}
+
+	maxCount := 0
+	maxValue := make([]interface{}, len(valueCount))
+	for v, c := range valueCount {
+		switch {
+		case c < maxCount:
+			continue
+		case c == maxCount:
+			maxValue = append(maxValue, NewDecimalFromInterface(v))
+		case c > maxCount:
+			maxValue = append([]interface{}{}, NewDecimalFromInterface(v))
+			maxCount = c
+		}
+	}
+	return maxValue
 }
