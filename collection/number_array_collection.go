@@ -137,26 +137,28 @@ func (c NumberArrayCollection) ToNumberArray() []decimal.Decimal {
 	return c.value
 }
 
-func (c NumberArrayCollection) Chunk(num int) interface{} {
-	s := make([][]decimal.Decimal, c.length/num+1)
+func (c NumberArrayCollection) Chunk(num int) MultiDimensionalArrayCollection {
+	var d MultiDimensionalArrayCollection
+	d.length = c.length/num + 1
+	d.value = make([][]interface{}, d.length)
 
 	count := 0
 	for i := 1; i <= c.length; i++ {
 		switch {
 		case i == c.length:
 			if i%num == 0 {
-				s[count] = c.value[i-num:]
-				s = s[:len(s)-1]
+				d.value[count] = c.All()[i-num:]
+				d.value = d.value[:d.length-1]
 			} else {
-				s[count] = c.value[i-i%num:]
+				d.value[count] = c.All()[i-i%num:]
 			}
 		case i%num != 0 || i < num:
 			continue
 		default:
-			s[count] = c.value[i-num : i]
+			d.value[count] = c.All()[i-num : i]
 			count++
 		}
 	}
 
-	return s
+	return d
 }
