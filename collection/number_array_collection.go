@@ -1,8 +1,6 @@
 package collection
 
-import (
-	"github.com/shopspring/decimal"
-)
+import "github.com/shopspring/decimal"
 
 type NumberArrayCollection struct {
 	value []decimal.Decimal
@@ -133,4 +131,28 @@ func (c NumberArrayCollection) Mode(key string) []interface{} {
 		}
 	}
 	return maxValue
+}
+
+func (c NumberArrayCollection) Chunk(num int) interface{} {
+	s := make([][]decimal.Decimal, c.length/num+1)
+
+	count := 0
+	for i := 1; i <= c.length; i++ {
+		switch {
+		case i == c.length:
+			if i%num == 0 {
+				s[count] = c.value[i-num:]
+				s = s[:len(s)-1]
+			} else {
+				s[count] = c.value[i-i%num:]
+			}
+		case i%num != 0 || i < num:
+			continue
+		default:
+			s[count] = c.value[i-num : i]
+			count++
+		}
+	}
+
+	return s
 }

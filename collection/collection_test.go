@@ -38,7 +38,7 @@ func TestNumberArrayCollection_Sum(t *testing.T) {
 	assert.Equal(t, Collect(floatTest).Sum().String(), "129.11")
 }
 
-func TestBaseCollection_Splice(t *testing.T) {
+func TestCollection_Splice(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o"}
 
 	assert.Equal(t, Collect(a).Splice(1, 3, []string{"a"}), Collect([]string{"h", "a", "o"}))
@@ -66,7 +66,7 @@ func TestCollection_Take(t *testing.T) {
 		}}))
 }
 
-func TestBaseCollection_All(t *testing.T) {
+func TestCollection_All(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o"}
 
 	assert.Equal(t, Collect(a).All(), []interface{}{"h", "e", "l", "l", "o"})
@@ -74,7 +74,7 @@ func TestBaseCollection_All(t *testing.T) {
 	assert.Equal(t, Collect(foo).All()[1], map[string]interface{}{"foo": 30})
 }
 
-func TestBaseCollection_Mode(t *testing.T) {
+func TestCollection_Mode(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o", "w", "o", "l", "d"}
 	foo2 := []map[string]interface{}{
 		{
@@ -94,4 +94,16 @@ func TestBaseCollection_Mode(t *testing.T) {
 		[]interface{}{NewDecimalFromInterface(6), NewDecimalFromInterface(8)})
 	assert.Equal(t, Collect(a).Mode(""), []interface{}{"l"})
 	assert.Equal(t, Collect(foo2).Mode("foo"), []interface{}{40})
+}
+
+func TestCollection_Chunk(t *testing.T) {
+	a := []string{"h", "e", "l", "l", "o"}
+	assert.Equal(t, Collect(foo).Chunk(2).([][]map[string]interface{})[0], []map[string]interface{}{
+		{
+			"foo": 10,
+		}, {
+			"foo": 30,
+		}})
+	assert.Equal(t, len(Collect(numbers).Chunk(3).([][]decimal.Decimal)), 4)
+	assert.Equal(t, Collect(a).Chunk(3).([][]string), [][]string{{"h", "e", "l"}, {"l", "o"}})
 }
