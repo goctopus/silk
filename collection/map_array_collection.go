@@ -73,6 +73,19 @@ func (c MapArrayCollection) Pluck(key string) Collection {
 	return Collect(s)
 }
 
+func (c MapArrayCollection) Prepend(values ...interface{}) Collection {
+
+	var d MapArrayCollection
+
+	var n = make([]map[string]interface{}, len(c.value))
+	copy(n, c.value)
+
+	d.value = append([]map[string]interface{}{values[0].(map[string]interface{})}, n...)
+	d.length = len(d.value)
+
+	return d
+}
+
 func (c MapArrayCollection) Only(keys []string) Collection {
 	var d MapArrayCollection
 

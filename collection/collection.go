@@ -2,6 +2,8 @@ package collection
 
 import (
 	"github.com/shopspring/decimal"
+	"bytes"
+	"encoding/gob"
 )
 
 func Collect(src interface{}) Collection {
@@ -460,4 +462,20 @@ func newDecimalFromInterface(a interface{}) decimal.Decimal {
 
 func nd(a interface{}) decimal.Decimal {
 	return newDecimalFromInterface(a)
+}
+
+func copyMap(m map[string]interface{}) map[string]interface{} {
+	var buf bytes.Buffer
+	enc := gob.NewEncoder(&buf)
+	dec := gob.NewDecoder(&buf)
+	err := enc.Encode(m)
+	if err != nil {
+		panic(err)
+	}
+	var cm map[string]interface{}
+	err = dec.Decode(&cm)
+	if err != nil {
+		panic(err)
+	}
+	return cm
 }

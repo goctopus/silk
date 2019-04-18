@@ -57,7 +57,10 @@ func (c NumberArrayCollection) Max(key ...string) decimal.Decimal {
 func (c NumberArrayCollection) Prepend(values ...interface{}) Collection {
 	var d NumberArrayCollection
 
-	d.value = append([]decimal.Decimal{newDecimalFromInterface(values[0])}, d.value...)
+	var n = make([]decimal.Decimal, len(c.value))
+	copy(n, c.value)
+
+	d.value = append([]decimal.Decimal{newDecimalFromInterface(values[0])}, n...)
 	d.length = len(d.value)
 
 	return d

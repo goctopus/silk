@@ -39,9 +39,13 @@ func (c StringArrayCollection) Combine(value []interface{}) Collection {
 }
 
 func (c StringArrayCollection) Prepend(values ...interface{}) Collection {
+
 	var d StringArrayCollection
 
-	d.value = append([]string{values[0].(string)}, c.value...)
+	var n = make([]string, len(c.value))
+	copy(n, c.value)
+
+	d.value = append([]string{values[0].(string)}, n...)
 	d.length = len(d.value)
 
 	return d

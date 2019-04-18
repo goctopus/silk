@@ -106,3 +106,13 @@ func TestBaseCollection_Mode(t *testing.T) {
 	assert.Equal(t, Collect(a).Mode(), []interface{}{"l"})
 	assert.Equal(t, Collect(foo2).Mode("foo"), []interface{}{40})
 }
+
+func TestBaseCollection_Prepend(t *testing.T) {
+	m := map[string]interface{}{
+		"foo": 10,
+	}
+	assert.Equal(t, Collect(m).Prepend("bar", 20).ToMap(), map[string]interface{}{
+		"foo": 10,
+		"bar": 20,
+	})
+}

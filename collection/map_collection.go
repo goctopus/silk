@@ -21,11 +21,13 @@ func (c MapCollection) Only(keys []string) Collection {
 }
 
 func (c MapCollection) Prepend(values ...interface{}) Collection {
-	var d MapCollection
 
-	d.value = c.value
-	d.value[values[0].(string)] = values[1]
-	d.length = len(d.value)
+	var m = copyMap(c.value)
+	m[values[0].(string)] = values[1]
 
-	return d
+	return MapCollection{m, BaseCollection{length: len(m)}}
+}
+
+func (c MapCollection) ToMap() map[string]interface{} {
+	return c.value
 }
