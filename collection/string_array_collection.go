@@ -123,3 +123,27 @@ func (c StringArrayCollection) Mode(key ...string) []interface{} {
 func (c StringArrayCollection) ToStringArray() []string {
 	return c.value
 }
+
+func (c StringArrayCollection) Chunk(num int) interface{} {
+	s := make([][]string, c.length/num+1)
+
+	count := 0
+	for i := 1; i <= c.length; i++ {
+		switch {
+		case i == c.length:
+			if i%num == 0 {
+				s[count] = c.value[i-num:]
+				s = s[:len(s)-1]
+			} else {
+				s[count] = c.value[i-i%num:]
+			}
+		case i%num != 0 || i < num:
+			continue
+		default:
+			s[count] = c.value[i-num : i]
+			count++
+		}
+	}
+
+	return s
+}

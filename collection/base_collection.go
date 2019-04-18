@@ -70,7 +70,7 @@ func (c BaseCollection) Average() {
 	panic("not implement")
 }
 
-func (c BaseCollection) Chunk() {
+func (c BaseCollection) Chunk(num int) interface{} {
 	panic("not implement")
 }
 
