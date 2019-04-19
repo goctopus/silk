@@ -187,7 +187,7 @@ type Collection interface {
 	Collapse() Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-concat
-	Concat()
+	Concat(value interface{}) Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-contains
 	Contains()

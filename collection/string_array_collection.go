@@ -148,3 +148,10 @@ func (c StringArrayCollection) Chunk(num int) MultiDimensionalArrayCollection {
 
 	return d
 }
+
+func (c StringArrayCollection) Concat(value interface{}) Collection {
+	return StringArrayCollection{
+		value:          append(c.value, value.([]string)...),
+		BaseCollection: BaseCollection{length: c.length + len(value.([]string))},
+	}
+}

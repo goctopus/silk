@@ -201,3 +201,10 @@ func (c MapArrayCollection) Chunk(num int) MultiDimensionalArrayCollection {
 
 	return d
 }
+
+func (c MapArrayCollection) Concat(value interface{}) Collection {
+	return MapArrayCollection{
+		value:          append(c.value, value.([]map[string]interface{})...),
+		BaseCollection: BaseCollection{length: c.length + len(value.([]map[string]interface{}))},
+	}
+}

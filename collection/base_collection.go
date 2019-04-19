@@ -83,7 +83,7 @@ func (c BaseCollection) Collapse() Collection {
 	panic("not implement")
 }
 
-func (c BaseCollection) Concat() {
+func (c BaseCollection) Concat(value interface{}) Collection {
 	panic("not implement")
 }
 

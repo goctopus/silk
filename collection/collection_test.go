@@ -115,10 +115,23 @@ func TestCollection_Chunk(t *testing.T) {
 	assert.Equal(t, Collect(a).Chunk(3).value[0][2], "l")
 }
 
-func TestBaseCollection_Collapse(t *testing.T) {
+func TestCollection_Collapse(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o"}
 
 	assert.Equal(t, Collect(foo).Chunk(2).Collapse(), Collect(foo))
 	assert.Equal(t, Collect(a).Chunk(3).Collapse(), Collect(a))
 	assert.Equal(t, Collect(numbers).Chunk(3).Collapse(), Collect(numbers))
+}
+
+func TestBaseCollection_Concat(t *testing.T) {
+	test_numbers := []int{1, 2, 3, 4, 5, 6, 6, 7, 8, 8, 9}
+	a := []string{"h", "e", "l", "l", "o"}
+
+	assert.Equal(t, len(Collect(foo).Concat(
+		[]map[string]interface{}{{"foo": 100}}).ToMapArray()), 5)
+	assert.Equal(t, Collect(numbers).Concat(
+		[]decimal.Decimal{newDecimalFromInterface(9)}), Collect(test_numbers))
+	assert.Equal(t, Collect(a).Concat([]string{"world"}).All()[5], "world")
+	assert.Equal(t, Collect(numbers).Chunk(2).Concat(
+		[][]interface{}{}).Collapse(), Collect(numbers))
 }

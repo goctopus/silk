@@ -33,3 +33,10 @@ func (c MultiDimensionalArrayCollection) Collapse() Collection {
 
 	return Collect(d)
 }
+
+func (c MultiDimensionalArrayCollection) Concat(value interface{}) Collection {
+	return MultiDimensionalArrayCollection{
+		value:          append(c.value, value.([][]interface{})...),
+		BaseCollection: BaseCollection{length: c.length + len(value.([][]interface{}))},
+	}
+}
