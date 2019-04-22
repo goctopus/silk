@@ -340,7 +340,7 @@ func SetResultValue(result *map[string]interface{}, index string, colVar interfa
 		}
 	case "CHAR":
 		colVar2 := colVar.(*interface{})
-		(*result)[index] = (*colVar2).(string)
+		(*result)[index] = (*colVar2).([]uint8)
 	default:
 		if colVar2, ok := colVar.(*interface{}); ok {
 			if colVar, ok = (*colVar2).(int64); ok {
