@@ -154,3 +154,9 @@ func TestCollection_ContainsStrict(t *testing.T) {
 	assert.Equal(t, Collect(a).Contains("l"), true)
 	assert.Equal(t, Collect(foo[3]).Contains(40, "foo"), true)
 }
+
+func TestCollection_CountBy(t *testing.T) {
+	a := []string{"h", "e", "l", "l", "o"}
+	assert.Equal(t, Collect(a).CountBy()["l"], 2)
+	assert.Equal(t, Collect(numbers).CountBy()[float64(8)], 2)
+}

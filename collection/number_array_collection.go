@@ -111,14 +111,8 @@ func (c NumberArrayCollection) All() []interface{} {
 	return s
 }
 
-// Type of slice use "" as parameter
 func (c NumberArrayCollection) Mode(key ...string) []interface{} {
-	valueCount := make(map[float64]int)
-	for _, v := range c.value {
-		f, _ := v.Float64()
-		valueCount[f]++
-	}
-
+	valueCount := c.CountBy()
 	maxCount := 0
 	maxValue := make([]interface{}, len(valueCount))
 	for v, c := range valueCount {
@@ -178,4 +172,14 @@ func (c NumberArrayCollection) Contains(value interface{}, key ...interface{}) b
 
 func (c NumberArrayCollection) ContainsStrict(value interface{}, key ...interface{}) bool {
 	return containsValue(c.value, value)
+}
+
+func (c NumberArrayCollection) CountBy() map[interface{}]int {
+	valueCount := make(map[interface{}]int)
+	for _, v := range c.value {
+		f, _ := v.Float64()
+		valueCount[f]++
+	}
+
+	return valueCount
 }

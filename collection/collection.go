@@ -198,7 +198,8 @@ type Collection interface {
 	ContainsStrict(value interface{}, key ...interface{}) bool
 
 	// reference: https://laravel.com/docs/5.8/collections#method-countBy
-	CountBy()
+	//  TODO: pass a callback to the countBy method to count all items by a custom value
+	CountBy() map[interface{}]int
 
 	// reference: https://laravel.com/docs/5.8/collections#method-crossJoin
 	CrossJoin()
