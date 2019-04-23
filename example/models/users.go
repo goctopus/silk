@@ -92,13 +92,13 @@ func (builder *UsersBuilder) All() []UsersModel {
 		var u UsersModel
 		u.Id = info[i]["id"].(int64)
 		if name, ok := info[i]["name"]; ok {
-			u.Name = name.(string)
+			u.Name = string(name.([]uint8))
 		}
 		if sex, ok := info[i]["sex"]; ok {
 			u.Sex = sex.(int64)
 		}
 		if country, ok := info[i]["country"]; ok {
-			u.Country = country.(string)
+			u.Country = string(country.([]uint8))
 		}
 		if created_at, ok := info[i]["created_at"]; ok {
 			u.Created_at = created_at.(string)
@@ -141,13 +141,13 @@ func (builder *UsersBuilder) First() UsersModel {
 	info, _ := builder.db.First()
 	u.Id = info["id"].(int64)
 	if name, ok := info["name"]; ok {
-		u.Name = name.(string)
+		u.Name = string(name.([]uint8))
 	}
 	if sex, ok := info["sex"]; ok {
 		u.Sex = sex.(int64)
 	}
 	if country, ok := info["country"]; ok {
-		u.Country = country.(string)
+		u.Country = string(country.([]uint8))
 	}
 	if created_at, ok := info["created_at"]; ok {
 		u.Created_at = created_at.(string)
