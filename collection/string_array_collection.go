@@ -172,3 +172,7 @@ func (c StringArrayCollection) Contains(value interface{}, key ...interface{}) b
 		return containsValue(c.value, value)
 	}
 }
+
+func (c StringArrayCollection) ContainsStrict(value interface{}, key ...interface{}) bool {
+	return containsValue(c.value, value)
+}

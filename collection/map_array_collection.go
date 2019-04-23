@@ -284,3 +284,12 @@ func containsKeyValue(m map[string]interface{}, key string, value interface{}) b
 
 	return false
 }
+
+func (c MapArrayCollection) ContainsStrict(value interface{}, key ...interface{}) bool {
+	for _, m := range c.value {
+		if parseContainsKey(m, value, key) {
+			return true
+		}
+	}
+	return false
+}

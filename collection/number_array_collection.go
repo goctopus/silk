@@ -175,3 +175,7 @@ func (c NumberArrayCollection) Concat(value interface{}) Collection {
 func (c NumberArrayCollection) Contains(value interface{}, key ...interface{}) bool {
 	return containsValue(c.value, value)
 }
+
+func (c NumberArrayCollection) ContainsStrict(value interface{}, key ...interface{}) bool {
+	return containsValue(c.value, value)
+}

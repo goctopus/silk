@@ -91,7 +91,7 @@ func (c BaseCollection) Contains(value interface{}, key ...interface{}) bool {
 	panic("not implement")
 }
 
-func (c BaseCollection) ContainsStrict() {
+func (c BaseCollection) ContainsStrict(value interface{}, key ...interface{}) bool {
 	panic("not implement")
 }
 

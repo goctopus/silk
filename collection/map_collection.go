@@ -48,3 +48,7 @@ func (c MapCollection) Contains(value interface{}, key ...interface{}) bool {
 		return parseContainsKey(c.value, value, key)
 	}
 }
+
+func (c MapCollection) ContainsStrict(value interface{}, key ...interface{}) bool {
+	return parseContainsKey(c.value, value, key)
+}

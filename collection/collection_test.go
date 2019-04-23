@@ -145,3 +145,12 @@ func TestCollection_Contains(t *testing.T) {
 	assert.Equal(t, Collect(a).Contains("5"), true)
 	assert.Equal(t, Collect(foo[3]).Contains(40, "foo"), true)
 }
+
+func TestCollection_ContainsStrict(t *testing.T) {
+	a := []string{"h", "e", "l", "l", "o"}
+
+	assert.Equal(t, Collect(foo).Contains(10), true)
+	assert.Equal(t, Collect(numbers).Contains(10), false)
+	assert.Equal(t, Collect(a).Contains("l"), true)
+	assert.Equal(t, Collect(foo[3]).Contains(40, "foo"), true)
+}

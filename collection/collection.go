@@ -194,7 +194,8 @@ type Collection interface {
 	Contains(value interface{}, key ...interface{}) bool
 
 	// reference: https://laravel.com/docs/5.8/collections#method-containsStrict
-	ContainsStrict()
+	// TODO: pass a callback to the contains method to perform user's own truth test
+	ContainsStrict(value interface{}, key ...interface{}) bool
 
 	// reference: https://laravel.com/docs/5.8/collections#method-countBy
 	CountBy()
