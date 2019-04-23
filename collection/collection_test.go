@@ -37,7 +37,7 @@ func TestNumberArrayCollection_Sum(t *testing.T) {
 	assert.Equal(t, Collect(floatTest).Sum().String(), "129.11")
 }
 
-func TestBaseCollection_Splice(t *testing.T) {
+func TestCollection_Splice(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o"}
 
 	c := Collect(a)
@@ -73,7 +73,7 @@ func TestCollection_Take(t *testing.T) {
 	})
 }
 
-func TestBaseCollection_All(t *testing.T) {
+func TestCollection_All(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o"}
 
 	assert.Equal(t, Collect(a).All(), []interface{}{"h", "e", "l", "l", "o"})
@@ -81,7 +81,7 @@ func TestBaseCollection_All(t *testing.T) {
 	assert.Equal(t, Collect(foo).All()[1], map[string]interface{}{"foo": 30})
 }
 
-func TestBaseCollection_Mode(t *testing.T) {
+func TestCollection_Mode(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o", "w", "o", "l", "d"}
 	foo2 := []map[string]interface{}{
 		{
@@ -107,12 +107,31 @@ func TestBaseCollection_Mode(t *testing.T) {
 	assert.Equal(t, Collect(foo2).Mode("foo"), []interface{}{40})
 }
 
-func TestBaseCollection_Prepend(t *testing.T) {
-	m := map[string]interface{}{
-		"foo": 10,
-	}
-	assert.Equal(t, Collect(m).Prepend("bar", 20).ToMap(), map[string]interface{}{
-		"foo": 10,
-		"bar": 20,
-	})
+func TestCollection_Chunk(t *testing.T) {
+	a := []string{"h", "e", "l", "l", "o"}
+
+	assert.Equal(t, Collect(foo).Chunk(2).value[0][0], map[string]interface{}{"foo": 10})
+	assert.Equal(t, len(Collect(numbers).Chunk(3).value), 4)
+	assert.Equal(t, Collect(a).Chunk(3).value[0][2], "l")
+}
+
+func TestCollection_Collapse(t *testing.T) {
+	a := []string{"h", "e", "l", "l", "o"}
+
+	assert.Equal(t, Collect(foo).Chunk(2).Collapse(), Collect(foo))
+	assert.Equal(t, Collect(a).Chunk(3).Collapse(), Collect(a))
+	assert.Equal(t, Collect(numbers).Chunk(3).Collapse(), Collect(numbers))
+}
+
+func TestBaseCollection_Concat(t *testing.T) {
+	test_numbers := []int{1, 2, 3, 4, 5, 6, 6, 7, 8, 8, 9}
+	a := []string{"h", "e", "l", "l", "o"}
+
+	assert.Equal(t, len(Collect(foo).Concat(
+		[]map[string]interface{}{{"foo": 100}}).ToMapArray()), 5)
+	assert.Equal(t, Collect(numbers).Concat(
+		[]decimal.Decimal{newDecimalFromInterface(9)}), Collect(test_numbers))
+	assert.Equal(t, Collect(a).Concat([]string{"world"}).All()[5], "world")
+	assert.Equal(t, Collect(numbers).Chunk(2).Concat(
+		[][]interface{}{}).Collapse(), Collect(numbers))
 }

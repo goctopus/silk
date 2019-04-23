@@ -75,15 +75,15 @@ func (c BaseCollection) Average() {
 	panic("not implement")
 }
 
-func (c BaseCollection) Chunk() {
+func (c BaseCollection) Chunk(num int) MultiDimensionalArrayCollection {
 	panic("not implement")
 }
 
-func (c BaseCollection) Collapse() {
+func (c BaseCollection) Collapse() Collection {
 	panic("not implement")
 }
 
-func (c BaseCollection) Concat() {
+func (c BaseCollection) Concat(value interface{}) Collection {
 	panic("not implement")
 }
 

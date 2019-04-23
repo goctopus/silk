@@ -122,3 +122,36 @@ func (c StringArrayCollection) Mode(key ...string) []interface{} {
 func (c StringArrayCollection) ToStringArray() []string {
 	return c.value
 }
+
+func (c StringArrayCollection) Chunk(num int) MultiDimensionalArrayCollection {
+	var d MultiDimensionalArrayCollection
+	d.length = c.length/num + 1
+	d.value = make([][]interface{}, d.length)
+
+	count := 0
+	for i := 1; i <= c.length; i++ {
+		switch {
+		case i == c.length:
+			if i%num == 0 {
+				d.value[count] = c.All()[i-num:]
+				d.value = d.value[:d.length-1]
+			} else {
+				d.value[count] = c.All()[i-i%num:]
+			}
+		case i%num != 0 || i < num:
+			continue
+		default:
+			d.value[count] = c.All()[i-num : i]
+			count++
+		}
+	}
+
+	return d
+}
+
+func (c StringArrayCollection) Concat(value interface{}) Collection {
+	return StringArrayCollection{
+		value:          append(c.value, value.([]string)...),
+		BaseCollection: BaseCollection{length: c.length + len(value.([]string))},
+	}
+}

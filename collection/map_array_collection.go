@@ -175,3 +175,36 @@ func (c MapArrayCollection) Mode(key ...string) []interface{} {
 func (c MapArrayCollection) ToMapArray() []map[string]interface{} {
 	return c.value
 }
+
+func (c MapArrayCollection) Chunk(num int) MultiDimensionalArrayCollection {
+	var d MultiDimensionalArrayCollection
+	d.length = c.length/num + 1
+	d.value = make([][]interface{}, d.length)
+
+	count := 0
+	for i := 1; i <= c.length; i++ {
+		switch {
+		case i == c.length:
+			if i%num == 0 {
+				d.value[count] = c.All()[i-num:]
+				d.value = d.value[:d.length-1]
+			} else {
+				d.value[count] = c.All()[i-i%num:]
+			}
+		case i%num != 0 || i < num:
+			continue
+		default:
+			d.value[count] = c.All()[i-num : i]
+			count++
+		}
+	}
+
+	return d
+}
+
+func (c MapArrayCollection) Concat(value interface{}) Collection {
+	return MapArrayCollection{
+		value:          append(c.value, value.([]map[string]interface{})...),
+		BaseCollection: BaseCollection{length: c.length + len(value.([]map[string]interface{}))},
+	}
+}
