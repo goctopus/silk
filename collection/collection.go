@@ -190,7 +190,8 @@ type Collection interface {
 	Concat(value interface{}) Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-contains
-	Contains()
+	// TODO: pass a callback to the contains method to perform user's own truth test
+	Contains(value interface{}, key ...interface{}) bool
 
 	// reference: https://laravel.com/docs/5.8/collections#method-containsStrict
 	ContainsStrict()

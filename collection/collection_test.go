@@ -123,7 +123,7 @@ func TestCollection_Collapse(t *testing.T) {
 	assert.Equal(t, Collect(numbers).Chunk(3).Collapse(), Collect(numbers))
 }
 
-func TestBaseCollection_Concat(t *testing.T) {
+func TestCollection_Concat(t *testing.T) {
 	test_numbers := []int{1, 2, 3, 4, 5, 6, 6, 7, 8, 8, 9}
 	a := []string{"h", "e", "l", "l", "o"}
 
@@ -134,4 +134,14 @@ func TestBaseCollection_Concat(t *testing.T) {
 	assert.Equal(t, Collect(a).Concat([]string{"world"}).All()[5], "world")
 	assert.Equal(t, Collect(numbers).Chunk(2).Concat(
 		[][]interface{}{}).Collapse(), Collect(numbers))
+}
+
+func TestCollection_Contains(t *testing.T) {
+	a := []string{"2", "3", "4", "5", "6"}
+
+	assert.Equal(t, Collect(foo).Contains(10), true)
+	assert.Equal(t, Collect(numbers).Contains(10), false)
+	assert.Equal(t, Collect(a).Contains(5), true)
+	assert.Equal(t, Collect(a).Contains("5"), true)
+	assert.Equal(t, Collect(foo[3]).Contains(40, "foo"), true)
 }

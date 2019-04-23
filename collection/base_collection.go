@@ -87,7 +87,7 @@ func (c BaseCollection) Concat(value interface{}) Collection {
 	panic("not implement")
 }
 
-func (c BaseCollection) Contains() {
+func (c BaseCollection) Contains(value interface{}, key ...interface{}) bool {
 	panic("not implement")
 }
 

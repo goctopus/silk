@@ -1,6 +1,8 @@
 package collection
 
-import "github.com/shopspring/decimal"
+import (
+	"github.com/shopspring/decimal"
+)
 
 type NumberArrayCollection struct {
 	value []decimal.Decimal
@@ -168,4 +170,8 @@ func (c NumberArrayCollection) Concat(value interface{}) Collection {
 		value:          append(c.value, value.([]decimal.Decimal)...),
 		BaseCollection: BaseCollection{length: c.length + len(value.([]decimal.Decimal))},
 	}
+}
+
+func (c NumberArrayCollection) Contains(value interface{}, key ...interface{}) bool {
+	return containsValue(c.value, value)
 }

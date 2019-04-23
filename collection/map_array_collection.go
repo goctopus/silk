@@ -1,7 +1,9 @@
 package collection
 
 import (
+	"fmt"
 	"github.com/shopspring/decimal"
+	"strconv"
 )
 
 type MapArrayCollection struct {
@@ -207,4 +209,78 @@ func (c MapArrayCollection) Concat(value interface{}) Collection {
 		value:          append(c.value, value.([]map[string]interface{})...),
 		BaseCollection: BaseCollection{length: c.length + len(value.([]map[string]interface{}))},
 	}
+}
+
+func (c MapArrayCollection) Contains(value interface{}, key ...interface{}) bool {
+	t := fmt.Sprintf("%T&%T", c.value, value)
+	switch {
+	case t == "[]map[string]string&int":
+		for _, m := range c.value {
+			if parseContainsKey(m, strconv.Itoa(value.(int)), key) {
+				return true
+			}
+		}
+		return false
+	case t == "[]map[string]string&int64":
+		for _, m := range c.value {
+			if parseContainsKey(m, strconv.FormatInt(value.(int64), 10), key) {
+				return true
+			}
+		}
+		return false
+	default:
+		for _, m := range c.value {
+			if parseContainsKey(m, value, key) {
+				return true
+			}
+		}
+		return false
+	}
+}
+
+func parseContainsKey(m map[string]interface{}, value interface{}, key []interface{}) bool {
+	switch {
+	case len(key) == 0:
+		return containsValue(m, value)
+	case len(key) == 1:
+		return containsKeyValue(m, key[0].(string), value)
+	default:
+		panic("invalid parameter")
+	}
+}
+
+func containsValue(m interface{}, value interface{}) bool {
+	switch m.(type) {
+	case map[string]interface{}:
+		for _, v := range m.(map[string]interface{}) {
+			if v == value {
+				return true
+			}
+		}
+		return false
+	case []decimal.Decimal:
+		for _, v := range m.([]decimal.Decimal) {
+			if v == newDecimalFromInterface(value) {
+				return true
+			}
+		}
+		return false
+	case []string:
+		for _, v := range m.([]string) {
+			if v == value {
+				return true
+			}
+		}
+		return false
+	default:
+		panic("wrong type")
+	}
+}
+
+func containsKeyValue(m map[string]interface{}, key string, value interface{}) bool {
+	if m[key] == value {
+		return true
+	}
+
+	return false
 }

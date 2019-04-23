@@ -1,5 +1,10 @@
 package collection
 
+import (
+	"fmt"
+	"strconv"
+)
+
 type StringArrayCollection struct {
 	value []string
 	BaseCollection
@@ -153,5 +158,17 @@ func (c StringArrayCollection) Concat(value interface{}) Collection {
 	return StringArrayCollection{
 		value:          append(c.value, value.([]string)...),
 		BaseCollection: BaseCollection{length: c.length + len(value.([]string))},
+	}
+}
+
+func (c StringArrayCollection) Contains(value interface{}, key ...interface{}) bool {
+	t := fmt.Sprintf("%T&%T", c.value, value)
+	switch {
+	case t == "[]string&int":
+		return containsValue(c.value, strconv.Itoa(value.(int)))
+	case t == "[]string&int64":
+		return containsValue(c.value, strconv.FormatInt(value.(int64), 10))
+	default:
+		return containsValue(c.value, value)
 	}
 }
