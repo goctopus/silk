@@ -190,12 +190,10 @@ type Collection interface {
 	Concat(value interface{}) Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-contains
-	// TODO: pass a callback to the contains method to perform user's own truth test
-	Contains(value interface{}, key ...interface{}) bool
+	Contains(value interface{}, callback ...interface{}) bool
 
 	// reference: https://laravel.com/docs/5.8/collections#method-containsStrict
-	// TODO: pass a callback to the contains method to perform user's own truth test
-	ContainsStrict(value interface{}, key ...interface{}) bool
+	ContainsStrict(value interface{}, callback ...interface{}) bool
 
 	// reference: https://laravel.com/docs/5.8/collections#method-countBy
 	//  TODO: pass a callback to the countBy method to count all items by a custom value

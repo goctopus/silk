@@ -211,26 +211,23 @@ func (c MapArrayCollection) Concat(value interface{}) Collection {
 	}
 }
 
-func (c MapArrayCollection) Contains(value interface{}, key ...interface{}) bool {
-	t := fmt.Sprintf("%T&%T", c.value, value)
+func (c MapArrayCollection) Contains(value interface{}, callback ...interface{}) bool {
+	if len(callback) != 0 {
+		return callback[0].(func(...interface{}) bool)()
+	}
+
+	t := fmt.Sprintf("%T", c.value)
 	switch {
-	case t == "[]map[string]string&int":
+	case t == "[]map[string]string":
 		for _, m := range c.value {
-			if parseContainsKey(m, strconv.Itoa(value.(int)), key) {
-				return true
-			}
-		}
-		return false
-	case t == "[]map[string]string&int64":
-		for _, m := range c.value {
-			if parseContainsKey(m, strconv.FormatInt(value.(int64), 10), key) {
+			if parseContainsParam(m, intToString(value)) {
 				return true
 			}
 		}
 		return false
 	default:
 		for _, m := range c.value {
-			if parseContainsKey(m, value, key) {
+			if parseContainsParam(m, value) {
 				return true
 			}
 		}
@@ -238,14 +235,23 @@ func (c MapArrayCollection) Contains(value interface{}, key ...interface{}) bool
 	}
 }
 
-func parseContainsKey(m map[string]interface{}, value interface{}, key []interface{}) bool {
-	switch {
-	case len(key) == 0:
-		return containsValue(m, value)
-	case len(key) == 1:
-		return containsKeyValue(m, key[0].(string), value)
+func parseContainsParam(m map[string]interface{}, value interface{}) bool {
+	switch value.(type) {
+	case map[string]interface{}:
+		return containsKeyValue(m, value.(map[string]interface{}))
 	default:
-		panic("invalid parameter")
+		return containsValue(m, value)
+	}
+}
+
+func intToString(value interface{}) interface{} {
+	switch value.(type) {
+	case int:
+		return strconv.Itoa(value.(int))
+	case int64:
+		return strconv.FormatInt(value.(int64), 10)
+	default:
+		return value
 	}
 }
 
@@ -260,7 +266,7 @@ func containsValue(m interface{}, value interface{}) bool {
 		return false
 	case []decimal.Decimal:
 		for _, v := range m.([]decimal.Decimal) {
-			if v == newDecimalFromInterface(value) {
+			if v.Equal(newDecimalFromInterface(value)) {
 				return true
 			}
 		}
@@ -277,19 +283,26 @@ func containsValue(m interface{}, value interface{}) bool {
 	}
 }
 
-func containsKeyValue(m map[string]interface{}, key string, value interface{}) bool {
-	if m[key] == value {
-		return true
+func containsKeyValue(m map[string]interface{}, value map[string]interface{}) bool {
+	for k, v := range value {
+		if _, ok := m[k]; !ok && m[k] != v {
+			return false
+		}
 	}
 
-	return false
+	return true
 }
 
-func (c MapArrayCollection) ContainsStrict(value interface{}, key ...interface{}) bool {
+func (c MapArrayCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
+	if len(callback) != 0 {
+		return callback[0].(func(...interface{}) bool)()
+	}
+
 	for _, m := range c.value {
-		if parseContainsKey(m, value, key) {
+		if parseContainsParam(m, value) {
 			return true
 		}
 	}
+
 	return false
 }

@@ -87,11 +87,11 @@ func (c BaseCollection) Concat(value interface{}) Collection {
 	panic("not implement")
 }
 
-func (c BaseCollection) Contains(value interface{}, key ...interface{}) bool {
+func (c BaseCollection) Contains(value interface{}, callback ...interface{}) bool {
 	panic("not implement")
 }
 
-func (c BaseCollection) ContainsStrict(value interface{}, key ...interface{}) bool {
+func (c BaseCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
 	panic("not implement")
 }
 

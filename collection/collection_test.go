@@ -143,7 +143,17 @@ func TestCollection_Contains(t *testing.T) {
 	assert.Equal(t, Collect(numbers).Contains(10), false)
 	assert.Equal(t, Collect(a).Contains(5), true)
 	assert.Equal(t, Collect(a).Contains("5"), true)
-	assert.Equal(t, Collect(foo[3]).Contains(40, "foo"), true)
+	assert.Equal(t, Collect(foo[3]).Contains(map[string]interface{}{"foo": 40}), true)
+
+	c := Collect(numbers)
+	assert.Equal(t, c.Contains(nil, func(...interface{}) bool {
+		for _, v := range c.Value().([]decimal.Decimal) {
+			if v.LessThan(newDecimalFromInterface(10)) {
+				return true
+			}
+		}
+		return false
+	}), true)
 }
 
 func TestCollection_ContainsStrict(t *testing.T) {
@@ -152,7 +162,17 @@ func TestCollection_ContainsStrict(t *testing.T) {
 	assert.Equal(t, Collect(foo).Contains(10), true)
 	assert.Equal(t, Collect(numbers).Contains(10), false)
 	assert.Equal(t, Collect(a).Contains("l"), true)
-	assert.Equal(t, Collect(foo[3]).Contains(40, "foo"), true)
+	assert.Equal(t, Collect(foo[3]).Contains(map[string]interface{}{"foo": 40}), true)
+
+	c := Collect(numbers)
+	assert.Equal(t, c.Contains(nil, func(...interface{}) bool {
+		for _, v := range c.Value().([]decimal.Decimal) {
+			if v.LessThan(newDecimalFromInterface(10)) {
+				return true
+			}
+		}
+		return false
+	}), true)
 }
 
 func TestCollection_CountBy(t *testing.T) {

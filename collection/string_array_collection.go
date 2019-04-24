@@ -2,7 +2,6 @@ package collection
 
 import (
 	"fmt"
-	"strconv"
 )
 
 type StringArrayCollection struct {
@@ -156,19 +155,25 @@ func (c StringArrayCollection) Concat(value interface{}) Collection {
 	}
 }
 
-func (c StringArrayCollection) Contains(value interface{}, key ...interface{}) bool {
-	t := fmt.Sprintf("%T&%T", c.value, value)
+func (c StringArrayCollection) Contains(value interface{}, callback ...interface{}) bool {
+	if len(callback) != 0 {
+		return callback[0].(func(...interface{}) bool)()
+	}
+
+	t := fmt.Sprintf("%T", c.value)
 	switch {
-	case t == "[]string&int":
-		return containsValue(c.value, strconv.Itoa(value.(int)))
-	case t == "[]string&int64":
-		return containsValue(c.value, strconv.FormatInt(value.(int64), 10))
+	case t == "[]string":
+		return containsValue(c.value, intToString(value))
 	default:
 		return containsValue(c.value, value)
 	}
 }
 
-func (c StringArrayCollection) ContainsStrict(value interface{}, key ...interface{}) bool {
+func (c StringArrayCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
+	if len(callback) != 0 {
+		return callback[0].(func(...interface{}) bool)()
+	}
+
 	return containsValue(c.value, value)
 }
 
