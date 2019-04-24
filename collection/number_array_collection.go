@@ -195,3 +195,27 @@ func (c NumberArrayCollection) CountBy(callback ...interface{}) map[interface{}]
 
 	return valueCount
 }
+
+func (c NumberArrayCollection) CrossJoin(array ...[]interface{}) MultiDimensionalArrayCollection {
+	var d MultiDimensionalArrayCollection
+
+	// A two-dimensional-slice's initial
+	length := len(c.value)
+	for _, s := range array {
+		length *= len(s)
+	}
+	value := make([][]interface{}, length)
+	for i := range value {
+		value[i] = make([]interface{}, len(array)+1)
+	}
+
+	offset := length / c.length
+	for i := 0; i < length; i++ {
+		value[i][0] = c.value[i/offset]
+	}
+	assignmentToValue(value, array, length, 1, 0, offset)
+
+	d.value = value
+	d.length = length
+	return d
+}

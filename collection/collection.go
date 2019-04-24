@@ -199,7 +199,7 @@ type Collection interface {
 	CountBy(callback ...interface{}) map[interface{}]int
 
 	// reference: https://laravel.com/docs/5.8/collections#method-crossJoin
-	CrossJoin(a ...[]interface{}) MultiDimensionalArrayCollection
+	CrossJoin(array ...[]interface{}) MultiDimensionalArrayCollection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-dd
 	Dd()

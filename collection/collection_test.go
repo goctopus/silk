@@ -193,3 +193,12 @@ func TestCollection_CountBy(t *testing.T) {
 		return valueCount
 	}), map[interface{}]int{"gmail.com": 2, "yahoo.com": 1})
 }
+
+func TestCollection_CrossJoin(t *testing.T) {
+	a := []interface{}{"h", "e", "l", "l", "o"}
+	b := []interface{}{1, 2, 3, 4, 5, 6, 6, 7, 8, 8}
+
+	assert.Equal(t, len(Collect(foo).CrossJoin(a, b).value), 200)
+	assert.Equal(t, len(Collect(numbers).CrossJoin(a).value), 50)
+	assert.Equal(t, Collect(foo).CrossJoin(b, a, b).value[1234][2], "l")
+}
