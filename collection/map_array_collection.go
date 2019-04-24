@@ -306,3 +306,43 @@ func (c MapArrayCollection) ContainsStrict(value interface{}, callback ...interf
 
 	return false
 }
+
+func (c MapArrayCollection) CrossJoin(a ...[]interface{}) MultiDimensionalArrayCollection {
+	var d MultiDimensionalArrayCollection
+
+	// a two-dimensional-slice' initial
+	length := len(c.value)
+	for _, s := range a {
+		length *= len(s)
+	}
+	value := make([][]interface{}, length)
+	for i := range value {
+		value[i] = make([]interface{}, len(a)+1)
+	}
+
+	vi := 0
+	for _, v := range c.value {
+		value[vi][0] = v
+		rangeSlice(value, a, vi, 0, len(a))
+	}
+
+	d.value = value
+	d.length = length
+	return d
+}
+
+// vi: index of value
+// si: index of value's sub-slice
+// length: len(a)
+// s: CrossJoin()'s parameter
+func rangeSlice(value, s [][]interface{}, vi, si, length int) {
+	for _, v := range s[si] {
+		value[vi][si+1] = v
+		if si == length-1 {
+			vi++
+		}
+		if si < length-1 {
+			rangeSlice(value, s, vi, si+1, length)
+		}
+	}
+}

@@ -99,7 +99,7 @@ func (c BaseCollection) CountBy(callback ...interface{}) map[interface{}]int {
 	panic("not implement")
 }
 
-func (c BaseCollection) CrossJoin() {
+func (c BaseCollection) CrossJoin(a ...[]interface{}) MultiDimensionalArrayCollection {
 	panic("not implement")
 }
 
