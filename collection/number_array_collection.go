@@ -9,10 +9,6 @@ type NumberArrayCollection struct {
 	BaseCollection
 }
 
-func (c NumberArrayCollection) Value() interface{} {
-	return c.value
-}
-
 func (c NumberArrayCollection) Sum(key ...string) decimal.Decimal {
 
 	var sum = decimal.New(0, 0)
@@ -172,7 +168,7 @@ func (c NumberArrayCollection) Concat(value interface{}) Collection {
 
 func (c NumberArrayCollection) Contains(value interface{}, callback ...interface{}) bool {
 	if len(callback) != 0 {
-		return callback[0].(func(...interface{}) bool)()
+		return callback[0].(func() bool)()
 	}
 
 	return containsValue(c.value, value)
@@ -180,13 +176,17 @@ func (c NumberArrayCollection) Contains(value interface{}, callback ...interface
 
 func (c NumberArrayCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
 	if len(callback) != 0 {
-		return callback[0].(func(...interface{}) bool)()
+		return callback[0].(func() bool)()
 	}
 
 	return containsValue(c.value, value)
 }
 
-func (c NumberArrayCollection) CountBy() map[interface{}]int {
+func (c NumberArrayCollection) CountBy(callback ...interface{}) map[interface{}]int {
+	if len(callback) != 0 {
+		return callback[0].(func() map[interface{}]int)()
+	}
+
 	valueCount := make(map[interface{}]int)
 	for _, v := range c.value {
 		f, _ := v.Float64()

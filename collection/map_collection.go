@@ -38,7 +38,7 @@ func (c MapCollection) ToMap() map[string]interface{} {
 
 func (c MapCollection) Contains(value interface{}, callback ...interface{}) bool {
 	if len(callback) != 0 {
-		return callback[0].(func(...interface{}) bool)()
+		return callback[0].(func() bool)()
 	}
 
 	t := fmt.Sprintf("%T", c.value)
@@ -52,7 +52,7 @@ func (c MapCollection) Contains(value interface{}, callback ...interface{}) bool
 
 func (c MapCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
 	if len(callback) != 0 {
-		return callback[0].(func(...interface{}) bool)()
+		return callback[0].(func() bool)()
 	}
 
 	return parseContainsParam(c.value, value)

@@ -157,7 +157,7 @@ func (c StringArrayCollection) Concat(value interface{}) Collection {
 
 func (c StringArrayCollection) Contains(value interface{}, callback ...interface{}) bool {
 	if len(callback) != 0 {
-		return callback[0].(func(...interface{}) bool)()
+		return callback[0].(func() bool)()
 	}
 
 	t := fmt.Sprintf("%T", c.value)
@@ -171,13 +171,17 @@ func (c StringArrayCollection) Contains(value interface{}, callback ...interface
 
 func (c StringArrayCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
 	if len(callback) != 0 {
-		return callback[0].(func(...interface{}) bool)()
+		return callback[0].(func() bool)()
 	}
 
 	return containsValue(c.value, value)
 }
 
-func (c StringArrayCollection) CountBy() map[interface{}]int {
+func (c StringArrayCollection) CountBy(callback ...interface{}) map[interface{}]int {
+	if len(callback) != 0 {
+		return callback[0].(func() map[interface{}]int)()
+	}
+
 	valueCount := make(map[interface{}]int)
 	for _, v := range c.value {
 		valueCount[v]++

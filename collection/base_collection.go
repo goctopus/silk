@@ -95,7 +95,7 @@ func (c BaseCollection) ContainsStrict(value interface{}, callback ...interface{
 	panic("not implement")
 }
 
-func (c BaseCollection) CountBy() map[interface{}]int {
+func (c BaseCollection) CountBy(callback ...interface{}) map[interface{}]int {
 	panic("not implement")
 }
 

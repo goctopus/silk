@@ -213,7 +213,7 @@ func (c MapArrayCollection) Concat(value interface{}) Collection {
 
 func (c MapArrayCollection) Contains(value interface{}, callback ...interface{}) bool {
 	if len(callback) != 0 {
-		return callback[0].(func(...interface{}) bool)()
+		return callback[0].(func() bool)()
 	}
 
 	t := fmt.Sprintf("%T", c.value)
@@ -295,7 +295,7 @@ func containsKeyValue(m map[string]interface{}, value map[string]interface{}) bo
 
 func (c MapArrayCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
 	if len(callback) != 0 {
-		return callback[0].(func(...interface{}) bool)()
+		return callback[0].(func() bool)()
 	}
 
 	for _, m := range c.value {

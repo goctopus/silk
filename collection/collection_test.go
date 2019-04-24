@@ -3,6 +3,7 @@ package collection
 import (
 	"github.com/magiconair/properties/assert"
 	"github.com/shopspring/decimal"
+	"strings"
 	"testing"
 )
 
@@ -146,9 +147,10 @@ func TestCollection_Contains(t *testing.T) {
 	assert.Equal(t, Collect(foo[3]).Contains(map[string]interface{}{"foo": 40}), true)
 
 	c := Collect(numbers)
-	assert.Equal(t, c.Contains(nil, func(...interface{}) bool {
-		for _, v := range c.Value().([]decimal.Decimal) {
-			if v.LessThan(newDecimalFromInterface(10)) {
+	value := 10
+	assert.Equal(t, c.Contains(value, func() bool {
+		for _, v := range c.ToNumberArray() {
+			if v.LessThan(newDecimalFromInterface(value)) {
 				return true
 			}
 		}
@@ -165,18 +167,29 @@ func TestCollection_ContainsStrict(t *testing.T) {
 	assert.Equal(t, Collect(foo[3]).Contains(map[string]interface{}{"foo": 40}), true)
 
 	c := Collect(numbers)
-	assert.Equal(t, c.Contains(nil, func(...interface{}) bool {
-		for _, v := range c.Value().([]decimal.Decimal) {
-			if v.LessThan(newDecimalFromInterface(10)) {
+	value := 10
+	assert.Equal(t, c.Contains(value, func() bool {
+		for _, v := range c.ToNumberArray() {
+			if v.GreaterThan(newDecimalFromInterface(value)) {
 				return true
 			}
 		}
 		return false
-	}), true)
+	}), false)
 }
 
 func TestCollection_CountBy(t *testing.T) {
 	a := []string{"h", "e", "l", "l", "o"}
 	assert.Equal(t, Collect(a).CountBy()["l"], 2)
 	assert.Equal(t, Collect(numbers).CountBy()[float64(8)], 2)
+
+	c := Collect([]string{"alice@gmail.com", "bob@yahoo.com", "carlos@gmail.com"})
+	assert.Equal(t, c.CountBy(func() map[interface{}]int {
+		valueCount := make(map[interface{}]int)
+		for _, v := range c.ToStringArray() {
+			f := strings.Split(v, "@")[1]
+			valueCount[f]++
+		}
+		return valueCount
+	}), map[interface{}]int{"gmail.com": 2, "yahoo.com": 1})
 }
