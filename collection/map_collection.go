@@ -57,3 +57,11 @@ func (c MapCollection) ContainsStrict(value interface{}, callback ...interface{}
 
 	return parseContainsParam(c.value, value)
 }
+
+func (c MapCollection) Dd() {
+	dd(c)
+}
+
+func (c MapCollection) Dump() {
+	dump(c)
+}

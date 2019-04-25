@@ -213,3 +213,11 @@ func (c StringArrayCollection) CrossJoin(array ...[]interface{}) MultiDimensiona
 	d.length = length
 	return d
 }
+
+func (c StringArrayCollection) Dd() {
+	dd(c)
+}
+
+func (c StringArrayCollection) Dump() {
+	dump(c)
+}

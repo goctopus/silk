@@ -202,3 +202,21 @@ func TestCollection_CrossJoin(t *testing.T) {
 	assert.Equal(t, len(Collect(numbers).CrossJoin(a).value), 50)
 	assert.Equal(t, Collect(foo).CrossJoin(b, a, b).value[1234][2], "l")
 }
+
+func TestCollection_Dd(t *testing.T) {
+	a := []interface{}{"h", "e", "l", "l", "o"}
+
+	Collect(foo).Dd()
+	Collect(numbers).Dd()
+	Collect(a).Dd()
+	Collect(foo[2]).Dd()
+}
+
+func TestCollection_Dump(t *testing.T) {
+	a := []interface{}{"h", "e", "l", "l", "o"}
+
+	Collect(foo).Dump()
+	Collect(numbers).Dump()
+	Collect(a).Dump()
+	Collect(foo[2]).Dump()
+}

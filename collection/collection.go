@@ -3,7 +3,9 @@ package collection
 import (
 	"bytes"
 	"encoding/gob"
+	"fmt"
 	"github.com/shopspring/decimal"
+	"os"
 )
 
 func Collect(src interface{}) Collection {
@@ -513,4 +515,13 @@ func copyMap(m map[string]interface{}) map[string]interface{} {
 		panic(err)
 	}
 	return cm
+}
+
+func dd(c Collection) {
+	fmt.Println(c)
+	os.Exit(0)
+}
+
+func dump(c Collection) {
+	fmt.Println(c)
 }

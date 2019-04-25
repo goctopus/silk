@@ -349,3 +349,11 @@ func assignmentToValue(value, array [][]interface{}, vl, si, ai, preOffset int) 
 		assignmentToValue(value, array, vl, si+1, ai+1, offset)
 	}
 }
+
+func (c MapArrayCollection) Dd() {
+	dd(c)
+}
+
+func (c MapArrayCollection) Dump() {
+	dump(c)
+}
