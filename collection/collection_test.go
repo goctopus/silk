@@ -3,6 +3,7 @@ package collection
 import (
 	"github.com/magiconair/properties/assert"
 	"github.com/shopspring/decimal"
+	"strings"
 	"testing"
 )
 
@@ -123,7 +124,7 @@ func TestCollection_Collapse(t *testing.T) {
 	assert.Equal(t, Collect(numbers).Chunk(3).Collapse(), Collect(numbers))
 }
 
-func TestBaseCollection_Concat(t *testing.T) {
+func TestCollection_Concat(t *testing.T) {
 	test_numbers := []int{1, 2, 3, 4, 5, 6, 6, 7, 8, 8, 9}
 	a := []string{"h", "e", "l", "l", "o"}
 
@@ -134,4 +135,88 @@ func TestBaseCollection_Concat(t *testing.T) {
 	assert.Equal(t, Collect(a).Concat([]string{"world"}).All()[5], "world")
 	assert.Equal(t, Collect(numbers).Chunk(2).Concat(
 		[][]interface{}{}).Collapse(), Collect(numbers))
+}
+
+func TestCollection_Contains(t *testing.T) {
+	a := []string{"2", "3", "4", "5", "6"}
+
+	assert.Equal(t, Collect(foo).Contains(10), true)
+	assert.Equal(t, Collect(numbers).Contains(10), false)
+	assert.Equal(t, Collect(a).Contains(5), true)
+	assert.Equal(t, Collect(a).Contains("5"), true)
+	assert.Equal(t, Collect(foo[3]).Contains(map[string]interface{}{"foo": 40}), true)
+
+	c := Collect(numbers)
+	value := 10
+	assert.Equal(t, c.Contains(value, func() bool {
+		for _, v := range c.ToNumberArray() {
+			if v.LessThan(newDecimalFromInterface(value)) {
+				return true
+			}
+		}
+		return false
+	}), true)
+}
+
+func TestCollection_ContainsStrict(t *testing.T) {
+	a := []string{"h", "e", "l", "l", "o"}
+
+	assert.Equal(t, Collect(foo).Contains(10), true)
+	assert.Equal(t, Collect(numbers).Contains(10), false)
+	assert.Equal(t, Collect(a).Contains("l"), true)
+	assert.Equal(t, Collect(foo[3]).Contains(map[string]interface{}{"foo": 40}), true)
+
+	c := Collect(numbers)
+	value := 10
+	assert.Equal(t, c.Contains(value, func() bool {
+		for _, v := range c.ToNumberArray() {
+			if v.GreaterThan(newDecimalFromInterface(value)) {
+				return true
+			}
+		}
+		return false
+	}), false)
+}
+
+func TestCollection_CountBy(t *testing.T) {
+	a := []string{"h", "e", "l", "l", "o"}
+	assert.Equal(t, Collect(a).CountBy()["l"], 2)
+	assert.Equal(t, Collect(numbers).CountBy()[float64(8)], 2)
+
+	c := Collect([]string{"alice@gmail.com", "bob@yahoo.com", "carlos@gmail.com"})
+	assert.Equal(t, c.CountBy(func() map[interface{}]int {
+		valueCount := make(map[interface{}]int)
+		for _, v := range c.ToStringArray() {
+			f := strings.Split(v, "@")[1]
+			valueCount[f]++
+		}
+		return valueCount
+	}), map[interface{}]int{"gmail.com": 2, "yahoo.com": 1})
+}
+
+func TestCollection_CrossJoin(t *testing.T) {
+	a := []interface{}{"h", "e", "l", "l", "o"}
+	b := []interface{}{1, 2, 3, 4, 5, 6, 6, 7, 8, 8}
+
+	assert.Equal(t, len(Collect(foo).CrossJoin(a, b).value), 200)
+	assert.Equal(t, len(Collect(numbers).CrossJoin(a).value), 50)
+	assert.Equal(t, Collect(foo).CrossJoin(b, a, b).value[1234][2], "l")
+}
+
+func TestCollection_Dd(t *testing.T) {
+	a := []interface{}{"h", "e", "l", "l", "o"}
+
+	Collect(foo).Dd()
+	Collect(numbers).Dd()
+	Collect(a).Dd()
+	Collect(foo[2]).Dd()
+}
+
+func TestCollection_Dump(t *testing.T) {
+	a := []interface{}{"h", "e", "l", "l", "o"}
+
+	Collect(foo).Dump()
+	Collect(numbers).Dump()
+	Collect(a).Dump()
+	Collect(foo[2]).Dump()
 }

@@ -87,19 +87,19 @@ func (c BaseCollection) Concat(value interface{}) Collection {
 	panic("not implement")
 }
 
-func (c BaseCollection) Contains() {
+func (c BaseCollection) Contains(value interface{}, callback ...interface{}) bool {
 	panic("not implement")
 }
 
-func (c BaseCollection) ContainsStrict() {
+func (c BaseCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
 	panic("not implement")
 }
 
-func (c BaseCollection) CountBy() {
+func (c BaseCollection) CountBy(callback ...interface{}) map[interface{}]int {
 	panic("not implement")
 }
 
-func (c BaseCollection) CrossJoin() {
+func (c BaseCollection) CrossJoin(array ...[]interface{}) MultiDimensionalArrayCollection {
 	panic("not implement")
 }
 

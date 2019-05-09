@@ -1,6 +1,8 @@
 package collection
 
-import "github.com/shopspring/decimal"
+import (
+	"github.com/shopspring/decimal"
+)
 
 type NumberArrayCollection struct {
 	value []decimal.Decimal
@@ -109,14 +111,8 @@ func (c NumberArrayCollection) All() []interface{} {
 	return s
 }
 
-// Type of slice use "" as parameter
 func (c NumberArrayCollection) Mode(key ...string) []interface{} {
-	valueCount := make(map[float64]int)
-	for _, v := range c.value {
-		f, _ := v.Float64()
-		valueCount[f]++
-	}
-
+	valueCount := c.CountBy()
 	maxCount := 0
 	maxValue := make([]interface{}, len(valueCount))
 	for v, c := range valueCount {
@@ -168,4 +164,66 @@ func (c NumberArrayCollection) Concat(value interface{}) Collection {
 		value:          append(c.value, value.([]decimal.Decimal)...),
 		BaseCollection: BaseCollection{length: c.length + len(value.([]decimal.Decimal))},
 	}
+}
+
+func (c NumberArrayCollection) Contains(value interface{}, callback ...interface{}) bool {
+	if len(callback) != 0 {
+		return callback[0].(func() bool)()
+	}
+
+	return containsValue(c.value, value)
+}
+
+func (c NumberArrayCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
+	if len(callback) != 0 {
+		return callback[0].(func() bool)()
+	}
+
+	return containsValue(c.value, value)
+}
+
+func (c NumberArrayCollection) CountBy(callback ...interface{}) map[interface{}]int {
+	if len(callback) != 0 {
+		return callback[0].(func() map[interface{}]int)()
+	}
+
+	valueCount := make(map[interface{}]int)
+	for _, v := range c.value {
+		f, _ := v.Float64()
+		valueCount[f]++
+	}
+
+	return valueCount
+}
+
+func (c NumberArrayCollection) CrossJoin(array ...[]interface{}) MultiDimensionalArrayCollection {
+	var d MultiDimensionalArrayCollection
+
+	// A two-dimensional-slice's initial
+	length := len(c.value)
+	for _, s := range array {
+		length *= len(s)
+	}
+	value := make([][]interface{}, length)
+	for i := range value {
+		value[i] = make([]interface{}, len(array)+1)
+	}
+
+	offset := length / c.length
+	for i := 0; i < length; i++ {
+		value[i][0] = c.value[i/offset]
+	}
+	assignmentToValue(value, array, length, 1, 0, offset)
+
+	d.value = value
+	d.length = length
+	return d
+}
+
+func (c NumberArrayCollection) Dd() {
+	dd(c)
+}
+
+func (c NumberArrayCollection) Dump() {
+	dump(c)
 }

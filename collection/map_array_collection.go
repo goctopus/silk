@@ -1,7 +1,9 @@
 package collection
 
 import (
+	"fmt"
 	"github.com/shopspring/decimal"
+	"strconv"
 )
 
 type MapArrayCollection struct {
@@ -207,4 +209,151 @@ func (c MapArrayCollection) Concat(value interface{}) Collection {
 		value:          append(c.value, value.([]map[string]interface{})...),
 		BaseCollection: BaseCollection{length: c.length + len(value.([]map[string]interface{}))},
 	}
+}
+
+func (c MapArrayCollection) Contains(value interface{}, callback ...interface{}) bool {
+	if len(callback) != 0 {
+		return callback[0].(func() bool)()
+	}
+
+	t := fmt.Sprintf("%T", c.value)
+	switch {
+	case t == "[]map[string]string":
+		for _, m := range c.value {
+			if parseContainsParam(m, intToString(value)) {
+				return true
+			}
+		}
+		return false
+	default:
+		for _, m := range c.value {
+			if parseContainsParam(m, value) {
+				return true
+			}
+		}
+		return false
+	}
+}
+
+func parseContainsParam(m map[string]interface{}, value interface{}) bool {
+	switch value.(type) {
+	case map[string]interface{}:
+		return containsKeyValue(m, value.(map[string]interface{}))
+	default:
+		return containsValue(m, value)
+	}
+}
+
+func intToString(value interface{}) interface{} {
+	switch value.(type) {
+	case int:
+		return strconv.Itoa(value.(int))
+	case int64:
+		return strconv.FormatInt(value.(int64), 10)
+	default:
+		return value
+	}
+}
+
+func containsValue(m interface{}, value interface{}) bool {
+	switch m.(type) {
+	case map[string]interface{}:
+		for _, v := range m.(map[string]interface{}) {
+			if v == value {
+				return true
+			}
+		}
+		return false
+	case []decimal.Decimal:
+		for _, v := range m.([]decimal.Decimal) {
+			if v.Equal(newDecimalFromInterface(value)) {
+				return true
+			}
+		}
+		return false
+	case []string:
+		for _, v := range m.([]string) {
+			if v == value {
+				return true
+			}
+		}
+		return false
+	default:
+		panic("wrong type")
+	}
+}
+
+func containsKeyValue(m map[string]interface{}, value map[string]interface{}) bool {
+	for k, v := range value {
+		if _, ok := m[k]; !ok && m[k] != v {
+			return false
+		}
+	}
+
+	return true
+}
+
+func (c MapArrayCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
+	if len(callback) != 0 {
+		return callback[0].(func() bool)()
+	}
+
+	for _, m := range c.value {
+		if parseContainsParam(m, value) {
+			return true
+		}
+	}
+
+	return false
+}
+
+func (c MapArrayCollection) CrossJoin(array ...[]interface{}) MultiDimensionalArrayCollection {
+	var d MultiDimensionalArrayCollection
+
+	// A two-dimensional-slice's initial
+	length := len(c.value)
+	for _, s := range array {
+		length *= len(s)
+	}
+	value := make([][]interface{}, length)
+	for i := range value {
+		value[i] = make([]interface{}, len(array)+1)
+	}
+
+	offset := length / c.length
+	for i := 0; i < length; i++ {
+		value[i][0] = c.value[i/offset]
+	}
+	assignmentToValue(value, array, length, 1, 0, offset)
+
+	d.value = value
+	d.length = length
+	return d
+}
+
+// vl: length of value
+// ai: index of array
+// si: index of value's sub-array
+func assignmentToValue(value, array [][]interface{}, vl, si, ai, preOffset int) {
+	offset := preOffset / len(array[ai])
+	times := 0
+
+	for i := 0; i < vl; i++ {
+		if i >= preOffset && i%preOffset == 0 {
+			times++
+		}
+		value[i][si] = array[ai][(i-preOffset*times)/offset]
+	}
+
+	if ai < len(array)-1 {
+		assignmentToValue(value, array, vl, si+1, ai+1, offset)
+	}
+}
+
+func (c MapArrayCollection) Dd() {
+	dd(c)
+}
+
+func (c MapArrayCollection) Dump() {
+	dump(c)
 }
