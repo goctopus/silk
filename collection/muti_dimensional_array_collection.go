@@ -32,3 +32,11 @@ func (c MultiDimensionalArrayCollection) Concat(value interface{}) Collection {
 		BaseCollection: BaseCollection{length: c.length + len(value.([][]interface{}))},
 	}
 }
+
+func (c MultiDimensionalArrayCollection) Dd() {
+	dd(c)
+}
+
+func (c MultiDimensionalArrayCollection) Dump() {
+	dump(c)
+}

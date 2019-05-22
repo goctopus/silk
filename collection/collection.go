@@ -3,7 +3,9 @@ package collection
 import (
 	"bytes"
 	"encoding/gob"
+	"fmt"
 	"github.com/shopspring/decimal"
+	"os"
 )
 
 func Collect(src interface{}) Collection {
@@ -190,16 +192,16 @@ type Collection interface {
 	Concat(value interface{}) Collection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-contains
-	Contains()
+	Contains(value interface{}, callback ...interface{}) bool
 
 	// reference: https://laravel.com/docs/5.8/collections#method-containsStrict
-	ContainsStrict()
+	ContainsStrict(value interface{}, callback ...interface{}) bool
 
 	// reference: https://laravel.com/docs/5.8/collections#method-countBy
-	CountBy()
+	CountBy(callback ...interface{}) map[interface{}]int
 
 	// reference: https://laravel.com/docs/5.8/collections#method-crossJoin
-	CrossJoin()
+	CrossJoin(array ...[]interface{}) MultiDimensionalArrayCollection
 
 	// reference: https://laravel.com/docs/5.8/collections#method-dd
 	Dd()
@@ -513,4 +515,13 @@ func copyMap(m map[string]interface{}) map[string]interface{} {
 		panic(err)
 	}
 	return cm
+}
+
+func dd(c Collection) {
+	fmt.Println(c)
+	os.Exit(0)
+}
+
+func dump(c Collection) {
+	fmt.Println(c)
 }

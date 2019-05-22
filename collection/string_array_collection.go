@@ -1,5 +1,9 @@
 package collection
 
+import (
+	"fmt"
+)
+
 type StringArrayCollection struct {
 	value []string
 	BaseCollection
@@ -96,13 +100,8 @@ func (c StringArrayCollection) All() []interface{} {
 	return s
 }
 
-// Type of slice use "" as parameter
 func (c StringArrayCollection) Mode(key ...string) []interface{} {
-	valueCount := make(map[string]int)
-	for _, v := range c.value {
-		valueCount[v]++
-	}
-
+	valueCount := c.CountBy()
 	maxCount := 0
 	maxValue := make([]interface{}, len(valueCount))
 	for v, c := range valueCount {
@@ -154,4 +153,71 @@ func (c StringArrayCollection) Concat(value interface{}) Collection {
 		value:          append(c.value, value.([]string)...),
 		BaseCollection: BaseCollection{length: c.length + len(value.([]string))},
 	}
+}
+
+func (c StringArrayCollection) Contains(value interface{}, callback ...interface{}) bool {
+	if len(callback) != 0 {
+		return callback[0].(func() bool)()
+	}
+
+	t := fmt.Sprintf("%T", c.value)
+	switch {
+	case t == "[]string":
+		return containsValue(c.value, intToString(value))
+	default:
+		return containsValue(c.value, value)
+	}
+}
+
+func (c StringArrayCollection) ContainsStrict(value interface{}, callback ...interface{}) bool {
+	if len(callback) != 0 {
+		return callback[0].(func() bool)()
+	}
+
+	return containsValue(c.value, value)
+}
+
+func (c StringArrayCollection) CountBy(callback ...interface{}) map[interface{}]int {
+	if len(callback) != 0 {
+		return callback[0].(func() map[interface{}]int)()
+	}
+
+	valueCount := make(map[interface{}]int)
+	for _, v := range c.value {
+		valueCount[v]++
+	}
+
+	return valueCount
+}
+
+func (c StringArrayCollection) CrossJoin(array ...[]interface{}) MultiDimensionalArrayCollection {
+	var d MultiDimensionalArrayCollection
+
+	// A two-dimensional-slice's initial
+	length := len(c.value)
+	for _, s := range array {
+		length *= len(s)
+	}
+	value := make([][]interface{}, length)
+	for i := range value {
+		value[i] = make([]interface{}, len(array)+1)
+	}
+
+	offset := length / c.length
+	for i := 0; i < length; i++ {
+		value[i][0] = c.value[i/offset]
+	}
+	assignmentToValue(value, array, length, 1, 0, offset)
+
+	d.value = value
+	d.length = length
+	return d
+}
+
+func (c StringArrayCollection) Dd() {
+	dd(c)
+}
+
+func (c StringArrayCollection) Dump() {
+	dump(c)
 }
