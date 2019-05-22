@@ -120,6 +120,15 @@ func Collect(src interface{}) Collection {
 			c.value = f
 			c.length = len(src.([]interface{}))
 			return c
+		case []uint8:
+			var c StringArrayCollection
+			var f = make([]string, len(src.([]interface{})))
+			for k, v := range src.([]interface{}) {
+				f[k] = string(v.([]uint8))
+			}
+			c.value = f
+			c.length = len(src.([]interface{}))
+			return c
 		default:
 			panic("wrong type")
 		}
