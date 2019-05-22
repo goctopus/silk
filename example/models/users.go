@@ -14,13 +14,13 @@ type UsersBuilder struct {
 }
 
 type UsersModel struct {
-	Id         int64  `json:"id"`
-	Name       string `json:"name"`
-	Sex        int64  `json:"sex"`
-	Country    string `json:"country"`
-	Created_at string `json:"created_at"`
-	Updated_at string `json:"updated_at"`
-	Exist      bool
+	Id        int64  `json:"id"`
+	Name      string `json:"name"`
+	Sex       int64  `json:"sex"`
+	Country   string `json:"country"`
+	CreatedAt string `json:"created_at"`
+	UpdatedAt string `json:"updated_at"`
+	Exist     bool
 }
 
 // construct methods
@@ -67,14 +67,14 @@ func (builder *UsersBuilder) OrWhere(field string, value interface{}) *silk.Buil
 // TODO: 怎么知道模型字段被赋值了没有
 func (builder *UsersBuilder) Save() {
 	if builder.Id != 0 {
-		builder.db.Insert(dialect.H{
+		_, _ = builder.db.Insert(dialect.H{
 			"id":      builder.Id,
 			"name":    builder.Name,
 			"sex":     builder.Sex,
 			"country": builder.Country,
 		})
 	} else {
-		builder.db.Insert(dialect.H{
+		_, _ = builder.db.Insert(dialect.H{
 			"name":    builder.Name,
 			"sex":     builder.Sex,
 			"country": builder.Country,
@@ -100,11 +100,11 @@ func (builder *UsersBuilder) All() []UsersModel {
 		if country, ok := info[i]["country"]; ok {
 			u.Country = string(country.([]uint8))
 		}
-		if created_at, ok := info[i]["created_at"]; ok {
-			u.Created_at = created_at.(string)
+		if createdAt, ok := info[i]["created_at"]; ok {
+			u.CreatedAt = createdAt.(string)
 		}
-		if updated_at, ok := info[i]["updated_at"]; ok {
-			u.Updated_at = updated_at.(string)
+		if updatedAt, ok := info[i]["updated_at"]; ok {
+			u.UpdatedAt = updatedAt.(string)
 		}
 		users = append(users, u)
 	}
@@ -118,7 +118,7 @@ func (builder *UsersBuilder) Collection() silk.Collection {
 }
 
 func (builder *UsersBuilder) Delete() {
-	builder.db.Delete()
+	_ = builder.db.Delete()
 	builder.Clean()
 }
 
@@ -149,11 +149,11 @@ func (builder *UsersBuilder) First() UsersModel {
 	if country, ok := info["country"]; ok {
 		u.Country = string(country.([]uint8))
 	}
-	if created_at, ok := info["created_at"]; ok {
-		u.Created_at = created_at.(string)
+	if createdAt, ok := info["created_at"]; ok {
+		u.CreatedAt = createdAt.(string)
 	}
-	if updated_at, ok := info["updated_at"]; ok {
-		u.Updated_at = updated_at.(string)
+	if updatedAt, ok := info["updated_at"]; ok {
+		u.UpdatedAt = updatedAt.(string)
 	}
 	u.Exist = true
 	builder.Clean()
