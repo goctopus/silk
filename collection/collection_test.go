@@ -125,13 +125,13 @@ func TestCollection_Collapse(t *testing.T) {
 }
 
 func TestCollection_Concat(t *testing.T) {
-	test_numbers := []int{1, 2, 3, 4, 5, 6, 6, 7, 8, 8, 9}
+	testNumbers := []int{1, 2, 3, 4, 5, 6, 6, 7, 8, 8, 9}
 	a := []string{"h", "e", "l", "l", "o"}
 
 	assert.Equal(t, len(Collect(foo).Concat(
 		[]map[string]interface{}{{"foo": 100}}).ToMapArray()), 5)
 	assert.Equal(t, Collect(numbers).Concat(
-		[]decimal.Decimal{newDecimalFromInterface(9)}), Collect(test_numbers))
+		[]decimal.Decimal{newDecimalFromInterface(9)}), Collect(testNumbers))
 	assert.Equal(t, Collect(a).Concat([]string{"world"}).All()[5], "world")
 	assert.Equal(t, Collect(numbers).Chunk(2).Concat(
 		[][]interface{}{}).Collapse(), Collect(numbers))
