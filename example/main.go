@@ -29,21 +29,21 @@ func main() {
 	user.Save()
 
 	newUser := models.Users().WhereName("张三").First()
-	fmt.Println(newUser.Id, newUser.Name)
+	fmt.Println("newUser.Id", newUser.Id, "newUser.Name", newUser.Name)
 
 	user.Name = "李四"
 	user.Sex = 1
 	user.Country = "中国"
 	user.Save()
 	newUser = models.Users().WhereName("李四").First()
-	fmt.Println(newUser.Id, newUser.Name)
-	fmt.Println(models.Users().Find(newUser.Id))
+	fmt.Println("newUser.Id", newUser.Id, "newUser.Name", newUser.Name)
+	fmt.Println("model", models.Users().Find(newUser.Id))
 
-	//coll := models.Users().WhereName("张三").Collection()
-	//fmt.Println(coll.Take(1).ToJson())
+	coll := models.Users().WhereCountry("中国").Collection()
+	fmt.Println("collection", coll.Take(1).ToMapArray())
 
 	allUsers := models.Users().WhereCountry("中国").All()
-	fmt.Println(allUsers)
+	fmt.Println("allUsers", allUsers)
 
 	models.Users().WhereCountry("中国").Delete()
 

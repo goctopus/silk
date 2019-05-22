@@ -71,7 +71,7 @@ func Open(dialect string, args ...interface{}) (db *DB, err error) {
 	}
 	// Send a ping to make sure the database connection is alive.
 	if err = dbSQL.Ping(); err != nil && ownDbSQL {
-		dbSQL.Close()
+		_ = dbSQL.Close()
 	}
 
 	DBInstance = db
@@ -86,7 +86,7 @@ func (db *DB) Query(query string, args ...interface{}) []map[string]interface{} 
 
 	if err != nil {
 		if rs != nil {
-			rs.Close()
+			_ = rs.Close()
 		}
 		panic(err)
 	}
@@ -95,7 +95,7 @@ func (db *DB) Query(query string, args ...interface{}) []map[string]interface{} 
 
 	if colErr != nil {
 		if rs != nil {
-			rs.Close()
+			_ = rs.Close()
 		}
 		panic(colErr)
 	}
@@ -103,7 +103,7 @@ func (db *DB) Query(query string, args ...interface{}) []map[string]interface{} 
 	typeVal, err := rs.ColumnTypes()
 	if err != nil {
 		if rs != nil {
-			rs.Close()
+			_ = rs.Close()
 		}
 		panic(err)
 	}
@@ -120,7 +120,7 @@ func (db *DB) Query(query string, args ...interface{}) []map[string]interface{} 
 		}
 		result := make(map[string]interface{})
 		if scanErr := rs.Scan(colVar...); scanErr != nil {
-			rs.Close()
+			_ = rs.Close()
 			panic(scanErr)
 		}
 		for j := 0; j < len(col); j++ {
@@ -131,11 +131,11 @@ func (db *DB) Query(query string, args ...interface{}) []map[string]interface{} 
 	}
 	if err := rs.Err(); err != nil {
 		if rs != nil {
-			rs.Close()
+			_ = rs.Close()
 		}
 		panic(err)
 	}
-	rs.Close()
+	_ = rs.Close()
 	return results
 }
 

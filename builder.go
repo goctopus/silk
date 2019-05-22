@@ -270,9 +270,7 @@ func (sql *Builder) FormFirst(v interface{}) error {
 		return err
 	}
 
-	Transfer(data, v)
-
-	return nil
+	return Transfer(data, v)
 }
 
 func (sql *Builder) empty() *Builder {
