@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/goctopus/silk"
+	"github.com/goctopus/silk/collection"
 	"github.com/goctopus/silk/dialect"
 )
 
@@ -112,9 +113,9 @@ func (builder *UsersBuilder) All() []UsersModel {
 	return users
 }
 
-func (builder *UsersBuilder) Collection() silk.Collection {
+func (builder *UsersBuilder) Collection() collection.Collection {
 	info, _ := builder.db.All()
-	return silk.Collect(info)
+	return collection.Collect(info)
 }
 
 func (builder *UsersBuilder) Delete() {
